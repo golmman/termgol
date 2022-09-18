@@ -1,8 +1,11 @@
 [package]
-name = "termgol"
+name = "k3l"
 version = "0.1.0"
 edition = "2021"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [dependencies]
+pathfinding = "3.0.10"
+rand = "0.8.4"
+signal-hook = "0.3.13"
+termion = "1.5.6"
+toml = "0.5.8"

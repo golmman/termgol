@@ -50,7 +50,13 @@ impl Renderer {
             size: ScreenPoint::new(1, 1),
         };
 
-        self.screen
-            .draw(&cursor, ScreenPoint::from(state.cursor_pos.clone()).right());
+        //self.screen.draw(&cursor, ScreenPoint::from(state.cursor_pos.clone()).right());
+
+        let color = Color {
+            bg_color: Some(2),
+            fg_color: Some(2),
+        };
+
+        self.screen.draw_pixel(ScreenPoint::from(state.cursor_pos.clone()), color);
     }
 }

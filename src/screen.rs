@@ -239,6 +239,14 @@ impl DefaultScreen {
         }
     }
 
+    pub fn draw_pixel(&mut self, p: ScreenPoint, color: Color) {
+        let index = (self.size.width() * p.y + p.x) as usize;
+        self.pixel_buffer[index] = Pixel {
+            ch: ' ',
+            color, 
+        };
+    }
+
     pub fn display(&mut self) {
         let mut s = String::new();
 

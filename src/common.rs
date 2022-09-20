@@ -4,10 +4,10 @@ use std::marker::PhantomData;
 use std::ops::Add;
 use std::ops::Sub;
 
-pub const TILE_SIZE: ScreenPoint = ScreenPoint::new(3, 1);
+pub const TILE_SIZE: Point = Point::new(3, 1);
 pub const FRAMES_PER_SECOND: u16 = 8;
 
-pub type ScreenPoint = Point2;
+pub type Point = Point2;
 
 #[derive(Clone, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Point2 {

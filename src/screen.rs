@@ -8,7 +8,7 @@ use termion::raw::RawTerminal;
 use crate::color::Color;
 use crate::common::intersect;
 use crate::common::RectAbsolute;
-use crate::common::ScreenPoint;
+use crate::common::Point;
 
 pub type DefaultScreen = Screen<RawTerminal<Stdout>>;
 
@@ -31,7 +31,7 @@ pub struct Screen<W: Write> {
     main_display: W,
     prelude_buffer: String,
     pixel_buffer: Vec<Pixel>,
-    pub size: ScreenPoint,
+    pub size: Point,
 }
 
 impl DefaultScreen {
@@ -39,10 +39,10 @@ impl DefaultScreen {
         Screen::from(stdout().into_raw_mode().unwrap())
     }
 
-    pub fn resize(&mut self) -> ScreenPoint {
+    pub fn resize(&mut self) -> Point {
         let (cols, rows) = termion::terminal_size().unwrap();
 
-        self.size = ScreenPoint::new(cols as i32, rows as i32);
+        self.size = Point::new(cols as i32, rows as i32);
 
         self.size.clone()
     }
@@ -56,7 +56,7 @@ impl DefaultScreen {
         //self.prelude_buffer.push_str("\x1b[H"); // goto to (1, 1)
     }
 
-    pub fn draw_color(&mut self, pos: ScreenPoint, size: ScreenPoint, color: Color) {
+    pub fn draw_color(&mut self, pos: Point, size: Point, color: Color) {
         let screen_rect = RectAbsolute {
             x1: 0,
             y1: 0,
@@ -83,7 +83,7 @@ impl DefaultScreen {
         }
     }
 
-    pub fn draw_inversion(&mut self, pos: ScreenPoint, size: ScreenPoint) {
+    pub fn draw_inversion(&mut self, pos: Point, size: Point) {
         let screen_rect = RectAbsolute {
             x1: 0,
             y1: 0,
@@ -118,12 +118,12 @@ impl DefaultScreen {
         }
     }
 
-    pub fn draw_pixel(&mut self, p: ScreenPoint, color: Color) {
+    pub fn draw_pixel(&mut self, p: Point, color: Color) {
         let index = (self.size.width() * p.y + p.x) as usize;
         self.pixel_buffer[index] = Pixel { ch: ' ', color };
     }
 
-    pub fn draw_text(&mut self, p: ScreenPoint, color: Color, text: String) {
+    pub fn draw_text(&mut self, p: Point, color: Color, text: String) {
         let index = (self.size.width() * p.y + p.x) as usize;
 
         for (i, ch) in text.chars().enumerate() {
@@ -198,7 +198,7 @@ impl<W: Write> From<W> for Screen<W> {
             main_display: buffer,
             prelude_buffer,
             pixel_buffer,
-            size: ScreenPoint::new(cols as i32, rows as i32),
+            size: Point::new(cols as i32, rows as i32),
         }
     }
 }

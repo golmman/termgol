@@ -1,5 +1,5 @@
 use crate::color::Color;
-use crate::common::ScreenPoint;
+use crate::common::Point;
 use crate::screen::DefaultScreen;
 use crate::screen::Pixel;
 use crate::state::State;
@@ -22,7 +22,7 @@ impl Renderer {
         }
     }
 
-    pub fn resize(&mut self) -> ScreenPoint {
+    pub fn resize(&mut self) -> Point {
         self.screen.resize()
     }
 
@@ -41,6 +41,6 @@ impl Renderer {
             fg_color: Some(2),
         };
 
-        self.screen.draw_pixel(ScreenPoint::from(state.cursor_pos.clone()), color);
+        self.screen.draw_pixel(Point::from(state.cursor_pos.clone()), color);
     }
 }

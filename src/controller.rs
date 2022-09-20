@@ -11,7 +11,7 @@ use termion::event::Key;
 use termion::input::TermRead;
 
 use crate::common::FRAMES_PER_SECOND;
-use crate::common::ScreenPoint;
+use crate::common::Point;
 use crate::renderer::Renderer;
 use crate::state::State;
 
@@ -45,7 +45,7 @@ impl Controller {
 
     pub fn run(&mut self) {
         self.resize();
-        self.state.cursor_pos = ScreenPoint::new(
+        self.state.cursor_pos = Point::new(
             self.state.screen_size.width() / 2,
             self.state.screen_size.height() / 2,
         );

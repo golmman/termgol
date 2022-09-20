@@ -1,4 +1,4 @@
-use crate::common::ScreenPoint;
+use crate::common::Point;
 use std::collections::HashSet;
 use std::rc::Rc;
 
@@ -6,9 +6,9 @@ use crate::renderer::draw_debug_info::DEBUG_INFO_PAGE_TOTAL;
 
 pub struct State {
     pub debug_info_page: i32,
-    pub cursor_pos: ScreenPoint,
+    pub cursor_pos: Point,
     pub elapsed_time: u64,
-    pub screen_size: ScreenPoint,
+    pub screen_size: Point,
 }
 
 impl State {
@@ -18,13 +18,13 @@ impl State {
 
         Self {
             debug_info_page: 1,
-            cursor_pos: ScreenPoint::new(0, 0),
+            cursor_pos: Point::new(0, 0),
             elapsed_time,
-            screen_size: ScreenPoint::new(0, 0),
+            screen_size: Point::new(0, 0),
         }
     }
 
-    pub fn resize(&mut self, screen_size: &ScreenPoint) {
+    pub fn resize(&mut self, screen_size: &Point) {
         self.screen_size = screen_size.clone();
     }
 

@@ -10,8 +10,8 @@ use std::time::Duration;
 use termion::event::Key;
 use termion::input::TermRead;
 
-use crate::common::MapPoint;
 use crate::common::FRAMES_PER_SECOND;
+use crate::common::ScreenPoint;
 use crate::renderer::Renderer;
 use crate::state::State;
 
@@ -45,7 +45,7 @@ impl Controller {
 
     pub fn run(&mut self) {
         self.resize();
-        self.state.cursor_pos = MapPoint::new(
+        self.state.cursor_pos = ScreenPoint::new(
             self.state.screen_size.width() / 2,
             self.state.screen_size.height() / 2,
         );

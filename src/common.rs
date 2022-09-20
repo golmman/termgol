@@ -7,7 +7,6 @@ use std::ops::Sub;
 pub const TILE_SIZE: ScreenPoint = ScreenPoint::new(3, 1);
 pub const FRAMES_PER_SECOND: u16 = 8;
 
-pub type MapPoint = Point<MapCoordinate>;
 pub type ScreenPoint = Point<ScreenCoordinate>;
 
 #[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
@@ -92,18 +91,6 @@ impl<W> Sub for &Point<W> {
 
     fn sub(self, rhs: Self) -> Self::Output {
         Point::new(self.x - rhs.x, self.y - rhs.y)
-    }
-}
-
-impl From<ScreenPoint> for MapPoint {
-    fn from(p: ScreenPoint) -> Self {
-        MapPoint::new(p.x / TILE_SIZE.width(), p.y / TILE_SIZE.height())
-    }
-}
-
-impl From<MapPoint> for ScreenPoint {
-    fn from(p: MapPoint) -> Self {
-        ScreenPoint::new(p.x * TILE_SIZE.width(), p.y * TILE_SIZE.height())
     }
 }
 

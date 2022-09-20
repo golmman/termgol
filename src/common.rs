@@ -1,10 +1,6 @@
-use std::cmp::max;
-use std::cmp::min;
-use std::marker::PhantomData;
 use std::ops::Add;
 use std::ops::Sub;
 
-pub const TILE_SIZE: Point = Point::new(3, 1);
 pub const FRAMES_PER_SECOND: u16 = 8;
 
 #[derive(Clone, Eq, Hash, Ord, PartialEq, PartialOrd)]
@@ -87,15 +83,6 @@ pub struct RectAbsolute<W> {
     pub y1: W,
     pub x2: W,
     pub y2: W,
-}
-
-pub fn intersect(r1: &RectAbsolute<i32>, r2: &RectAbsolute<i32>) -> RectAbsolute<i32> {
-    let x1 = max(r1.x1, r2.x1);
-    let y1 = max(r1.y1, r2.y1);
-    let x2 = min(r1.x2, r2.x2);
-    let y2 = min(r1.y2, r2.y2);
-
-    RectAbsolute { x1, y1, x2, y2 }
 }
 
 #[cfg(test)]

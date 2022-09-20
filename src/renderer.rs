@@ -1,7 +1,6 @@
 use crate::color::Color;
 use crate::common::Point;
 use crate::screen::DefaultScreen;
-use crate::screen::Pixel;
 use crate::state::State;
 
 pub mod draw_debug_info;

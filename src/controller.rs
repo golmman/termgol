@@ -1,5 +1,4 @@
 use std::io::stdin;
-use std::rc::Rc;
 use std::sync::mpsc::sync_channel;
 use std::sync::mpsc::Receiver;
 use std::sync::mpsc::SyncSender;
@@ -92,10 +91,10 @@ impl Controller {
         match event {
             TerminalEvent::Key(key) => match key {
                 Key::Char('q') => return false,
-                Key::Char('H') => self.state.move_cursor_left(),
-                Key::Char('L') => self.state.move_cursor_right(),
-                Key::Char('K') => self.state.move_cursor_up(),
-                Key::Char('J') => self.state.move_cursor_down(),
+                Key::Char('h') => self.state.move_cursor_left(),
+                Key::Char('l') => self.state.move_cursor_right(),
+                Key::Char('k') => self.state.move_cursor_up(),
+                Key::Char('j') => self.state.move_cursor_down(),
 
                 Key::Char('d') => self.state.debug_info_next_page(),
 

@@ -6,8 +6,6 @@ use termion::raw::IntoRawMode;
 use termion::raw::RawTerminal;
 
 use crate::color::Color;
-use crate::common::intersect;
-use crate::common::RectAbsolute;
 use crate::common::Point;
 
 pub type DefaultScreen = Screen<RawTerminal<Stdout>>;
@@ -54,68 +52,6 @@ impl DefaultScreen {
 
         //self.prelude_buffer.push_str("\x1b[2J"); // clear screen
         //self.prelude_buffer.push_str("\x1b[H"); // goto to (1, 1)
-    }
-
-    pub fn draw_color(&mut self, pos: Point, size: Point, color: Color) {
-        let screen_rect = RectAbsolute {
-            x1: 0,
-            y1: 0,
-            x2: self.size.width(),
-            y2: self.size.height(),
-        };
-
-        let sprite_rect = RectAbsolute {
-            x1: pos.x,
-            y1: pos.y,
-            x2: pos.x + size.width(),
-            y2: pos.y + size.height(),
-        };
-
-        let intersection = intersect(&screen_rect, &sprite_rect);
-
-        for sprite_y in intersection.y1..intersection.y2 {
-            for sprite_x in intersection.x1..intersection.x2 {
-                let screen_i = (self.size.width() * sprite_y + sprite_x) as usize;
-                let ch = self.pixel_buffer[screen_i].ch;
-
-                self.pixel_buffer[screen_i] = Pixel { ch, color };
-            }
-        }
-    }
-
-    pub fn draw_inversion(&mut self, pos: Point, size: Point) {
-        let screen_rect = RectAbsolute {
-            x1: 0,
-            y1: 0,
-            x2: self.size.width(),
-            y2: self.size.height(),
-        };
-
-        let sprite_rect = RectAbsolute {
-            x1: pos.x,
-            y1: pos.y,
-            x2: pos.x + size.width(),
-            y2: pos.y + size.height(),
-        };
-
-        let intersection = intersect(&screen_rect, &sprite_rect);
-
-        for sprite_y in intersection.y1..intersection.y2 {
-            for sprite_x in intersection.x1..intersection.x2 {
-                let screen_i = (self.size.width() * sprite_y + sprite_x) as usize;
-
-                let fg_color = self.pixel_buffer[screen_i].color.bg_color;
-
-                let bg_color = self.pixel_buffer[screen_i].color.fg_color;
-
-                let ch = self.pixel_buffer[screen_i].ch;
-
-                self.pixel_buffer[screen_i] = Pixel {
-                    ch,
-                    color: Color { fg_color, bg_color },
-                };
-            }
-        }
     }
 
     pub fn draw_pixel(&mut self, p: Point, color: Color) {

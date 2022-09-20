@@ -1,7 +1,4 @@
 use crate::common::Point;
-use std::collections::HashSet;
-use std::rc::Rc;
-
 use crate::renderer::draw_debug_info::DEBUG_INFO_PAGE_TOTAL;
 
 pub struct State {

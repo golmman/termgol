@@ -49,9 +49,6 @@ impl DefaultScreen {
         let buffer_size = (self.size.width() * self.size.height()) as usize;
         self.prelude_buffer = String::new();
         self.pixel_buffer = vec![Pixel::from(' '); buffer_size];
-
-        //self.prelude_buffer.push_str("\x1b[2J"); // clear screen
-        //self.prelude_buffer.push_str("\x1b[H"); // goto to (1, 1)
     }
 
     pub fn draw_pixel(&mut self, p: Point, color: Color) {
@@ -76,34 +73,48 @@ impl DefaultScreen {
             let row = y + 1;
             s.push_str(&format!("\x1b[{row};1H")); // goto (row, 1)
 
-            let mut last_color = Color::none();
+            let mut x = 0;
 
-            // TODO: background color is not properly set, when e.g. transparent npc is next to another color
-            for x in 0..self.size.width() {
-                let i = (self.size.width() * y + x) as usize;
-                let ch = self.pixel_buffer[i].ch;
-                let color = self.pixel_buffer[i].color;
+            while x < self.size.width() {
+                let mut i = (self.size.width() * y + x) as usize;
+                let mut last_color = self.pixel_buffer[i].color;
+                s.push_str(&format!("{last_color}"));
 
-                let mut change_color = Color::none();
+                while x < self.size.width() && last_color.is_same(&self.pixel_buffer[i].color) {
+                    last_color = self.pixel_buffer[i].color;
+                    s.push(self.pixel_buffer[i].ch);
 
-                if color.bg_color.is_some() && color.bg_color != last_color.bg_color {
-                    change_color.bg_color = color.bg_color;
-                }
-
-                if color.fg_color.is_some() && color.fg_color != last_color.fg_color {
-                    change_color.fg_color = color.fg_color;
-                }
-
-                s.push_str(&format!("{change_color}{ch}"));
-
-                if change_color.bg_color.is_some() {
-                    last_color.bg_color = change_color.bg_color;
-                }
-
-                if change_color.fg_color.is_some() {
-                    last_color.fg_color = change_color.fg_color;
+                    x += 1;
+                    i = (self.size.width() * y + x) as usize;
                 }
             }
+
+            // TODO: background color is not properly set, when e.g. transparent npc is next to another color
+            //for x in 0..self.size.width() {
+            //    let i = (self.size.width() * y + x) as usize;
+            //    let ch = self.pixel_buffer[i].ch;
+            //    let color = self.pixel_buffer[i].color;
+
+            //    let mut change_color = Color::none();
+
+            //    if color.bg_color.is_some() && color.bg_color != last_color.bg_color {
+            //        change_color.bg_color = color.bg_color;
+            //    }
+
+            //    if color.fg_color.is_some() && color.fg_color != last_color.fg_color {
+            //        change_color.fg_color = color.fg_color;
+            //    }
+
+            //    s.push_str(&format!("{change_color}{ch}"));
+
+            //    if change_color.bg_color.is_some() {
+            //        last_color.bg_color = change_color.bg_color;
+            //    }
+
+            //    if change_color.fg_color.is_some() {
+            //        last_color.fg_color = change_color.fg_color;
+            //    }
+            //}
         }
 
         self.main_display.write_all(s.as_bytes()).unwrap();

@@ -43,6 +43,26 @@ impl Color {
             fg_color: Some(7),
         }
     }
+
+    //pub fn is_same(&self, other_color: &Color) -> bool {
+    //    if other_color.bg_color.is_some() && other_color.fg_color.is_some() {
+    //        return self.bg_color == other_color.bg_color && self.fg_color == other_color.fg_color;
+    //    }
+
+    //    if other_color.bg_color.is_some() && other_color.fg_color.is_none() {
+    //        return self.bg_color == other_color.bg_color;
+    //    }
+
+    //    if other_color.fg_color.is_some() && other_color.bg_color.is_none() {
+    //        return self.fg_color == other_color.fg_color;
+    //    }
+
+    //    true
+    //}
+
+    pub fn is_same(&self, other_color: &Color) -> bool {
+        self.bg_color == other_color.bg_color && self.fg_color == other_color.fg_color
+    }
 }
 
 impl From<&Color> for String {

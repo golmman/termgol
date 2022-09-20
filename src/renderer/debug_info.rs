@@ -14,10 +14,7 @@ impl Renderer {
     }
 
     fn draw_next_line(&mut self, formatted_string: String) {
-        let color = Color {
-            bg_color: None,
-            fg_color: Some(7),
-        };
+        let color = Color::text();
 
         self.screen
             .draw_text(Point::new(0, self.debug_line_y), color, formatted_string);

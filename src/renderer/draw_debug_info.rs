@@ -1,6 +1,6 @@
 use super::Renderer;
-use crate::color::Color;
-use crate::common::Point;
+use crate::common::color::Color;
+use crate::common::point::Point;
 use crate::state::State;
 
 pub const DEBUG_INFO_PAGE_TOTAL: i32 = 1;
@@ -20,7 +20,8 @@ impl Renderer {
             fg_color: Some(7),
         };
 
-        self.screen.draw_text(Point::new(0, self.debug_line_y), color, formatted_string);
+        self.screen
+            .draw_text(Point::new(0, self.debug_line_y), color, formatted_string);
         self.debug_line_y += 1;
     }
 

@@ -9,8 +9,8 @@ use std::time::Duration;
 use termion::event::Key;
 use termion::input::TermRead;
 
+use crate::common::point::Point;
 use crate::common::FRAMES_PER_SECOND;
-use crate::common::Point;
 use crate::renderer::Renderer;
 use crate::state::State;
 

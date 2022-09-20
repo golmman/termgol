@@ -1,5 +1,5 @@
-use crate::color::Color;
-use crate::common::Point;
+use crate::common::color::Color;
+use crate::common::point::Point;
 use crate::screen::DefaultScreen;
 use crate::state::State;
 
@@ -40,6 +40,7 @@ impl Renderer {
             fg_color: Some(2),
         };
 
-        self.screen.draw_pixel(Point::from(state.cursor_pos.clone()), color);
+        self.screen
+            .draw_pixel(Point::from(state.cursor_pos.clone()), color);
     }
 }

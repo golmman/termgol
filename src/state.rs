@@ -1,4 +1,4 @@
-use crate::common::Point;
+use crate::common::point::Point;
 use crate::renderer::draw_debug_info::DEBUG_INFO_PAGE_TOTAL;
 
 pub struct State {

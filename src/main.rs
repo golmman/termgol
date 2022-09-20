@@ -1,6 +1,5 @@
 use crate::controller::Controller;
 
-mod color;
 mod common;
 mod controller;
 mod renderer;

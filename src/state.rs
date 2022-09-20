@@ -3,7 +3,6 @@ use std::collections::HashSet;
 use std::rc::Rc;
 
 use crate::renderer::draw_debug_info::DEBUG_INFO_PAGE_TOTAL;
-use crate::screen::Sprite;
 
 pub struct State {
     pub debug_info_page: i32,

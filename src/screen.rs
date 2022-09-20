@@ -241,10 +241,15 @@ impl DefaultScreen {
 
     pub fn draw_pixel(&mut self, p: ScreenPoint, color: Color) {
         let index = (self.size.width() * p.y + p.x) as usize;
-        self.pixel_buffer[index] = Pixel {
-            ch: ' ',
-            color, 
-        };
+        self.pixel_buffer[index] = Pixel { ch: ' ', color };
+    }
+
+    pub fn draw_text(&mut self, p: ScreenPoint, color: Color, text: String) {
+        let index = (self.size.width() * p.y + p.x) as usize;
+
+        for (i, ch) in text.chars().enumerate() {
+            self.pixel_buffer[index + i] = Pixel { ch, color };
+        }
     }
 
     pub fn display(&mut self) {

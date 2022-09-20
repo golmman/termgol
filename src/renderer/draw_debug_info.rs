@@ -1,7 +1,6 @@
 use super::Renderer;
-use crate::common::MapPoint;
+use crate::color::Color;
 use crate::common::ScreenPoint;
-use crate::screen::Sprite;
 use crate::state::State;
 
 pub const DEBUG_INFO_PAGE_TOTAL: i32 = 2;
@@ -16,9 +15,12 @@ impl Renderer {
     }
 
     fn draw_next_line(&mut self, formatted_string: String) {
-        let sprite = Sprite::from(formatted_string);
-        self.screen
-            .draw(&sprite, ScreenPoint::new(0, self.debug_line_y));
+        let color = Color {
+            bg_color: None,
+            fg_color: Some(7),
+        };
+
+        self.screen.draw_text(ScreenPoint::new(0, self.debug_line_y), color, formatted_string);
         self.debug_line_y += 1;
     }
 

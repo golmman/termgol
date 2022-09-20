@@ -27,103 +27,10 @@ impl From<char> for Pixel {
     }
 }
 
-#[derive(Debug, Clone)]
-pub struct Sprite {
-    pub pixels: Vec<Pixel>,
-    pub size: ScreenPoint,
-}
-
-impl Sprite {
-    pub fn from_color_text(text: &str, color: Color) -> Self {
-        let width = text.chars().count() as i32;
-        let height = 1;
-        let mut pixels = Vec::new();
-
-        for ch in text.chars() {
-            pixels.push(Pixel { ch, color });
-        }
-
-        Self {
-            pixels,
-            size: ScreenPoint::new(width, height),
-        }
-    }
-}
-
-impl From<&str> for Sprite {
-    fn from(s: &str) -> Self {
-        Self::from_color_text(s, Color::new(0, 7))
-    }
-}
-
-impl From<String> for Sprite {
-    fn from(s: String) -> Self {
-        Self::from(s.as_str())
-    }
-}
-
-// TODO: Naming? Used for Npcs as well, so maybe Animation?
-// so the vec of Animation is simply 'animations'
-// also it should be a vec of Sprites!
-#[derive(Clone, Debug)]
-pub struct Animation {
-    pub sprites: Vec<Sprite>,
-}
-
-impl Animation {
-    pub fn new(texts: Vec<&str>, color: Color) -> Self {
-        let sprites = texts
-            .into_iter()
-            .map(|t| Sprite::from_color_text(t, color))
-            .collect();
-
-        Self { sprites }
-    }
-
-    pub fn with_color(color: Color) -> impl Fn(Self) -> Self {
-        move |mut animation| {
-            for sprite_i in 0..animation.sprites.len() {
-                let sprite = &mut animation.sprites[sprite_i];
-                for pixel_i in 0..sprite.pixels.len() {
-                    sprite.pixels[pixel_i].color = color;
-                }
-            }
-            animation
-        }
-    }
-}
-
-impl From<Vec<&str>> for Animation {
-    fn from(f: Vec<&str>) -> Self {
-        let sprites = f
-            .into_iter()
-            .map(|t| Sprite::from_color_text(t, Color::none()))
-            .collect();
-
-        Self { sprites }
-    }
-}
-
-impl From<&toml::Value> for Animation {
-    fn from(value: &toml::Value) -> Self {
-        let str_vec: Vec<&str> = value
-            .as_array()
-            .unwrap()
-            .iter()
-            .map(|x| x.as_str().unwrap())
-            .collect();
-
-        Animation::from(str_vec)
-    }
-}
-
 pub struct Screen<W: Write> {
     main_display: W,
     prelude_buffer: String,
-
-    // TODO: make sprite?
     pixel_buffer: Vec<Pixel>,
-
     pub size: ScreenPoint,
 }
 
@@ -207,34 +114,6 @@ impl DefaultScreen {
                     ch,
                     color: Color { fg_color, bg_color },
                 };
-            }
-        }
-    }
-
-    // TODO: make p a reference
-    pub fn draw(&mut self, sprite: &Sprite, p: ScreenPoint) {
-        let screen_rect = RectAbsolute {
-            x1: 0,
-            y1: 0,
-            x2: self.size.width(),
-            y2: self.size.height(),
-        };
-
-        let sprite_rect = RectAbsolute {
-            x1: p.x,
-            y1: p.y,
-            x2: p.x + sprite.size.width(),
-            y2: p.y + sprite.size.height(),
-        };
-
-        let intersection = intersect(&screen_rect, &sprite_rect);
-
-        for sprite_y in intersection.y1..intersection.y2 {
-            for sprite_x in intersection.x1..intersection.x2 {
-                let screen_i = (self.size.width() * sprite_y + sprite_x) as usize;
-                let sprite_i = (sprite.size.width() * (sprite_y - p.y) + sprite_x - p.x) as usize;
-
-                self.pixel_buffer[screen_i] = sprite.pixels[sprite_i].clone();
             }
         }
     }

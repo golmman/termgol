@@ -7,25 +7,17 @@ use std::ops::Sub;
 pub const TILE_SIZE: ScreenPoint = ScreenPoint::new(3, 1);
 pub const FRAMES_PER_SECOND: u16 = 8;
 
-pub type ScreenPoint = Point<ScreenCoordinate>;
-
-#[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
-pub struct MapCoordinate;
-
-#[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
-pub struct ScreenCoordinate;
+pub type ScreenPoint = Point2;
 
 #[derive(Clone, Eq, Hash, Ord, PartialEq, PartialOrd)]
-pub struct Point<W> {
-    phantom: PhantomData<*const W>,
+pub struct Point2 {
     pub x: i32,
     pub y: i32,
 }
 
-impl<W> Point<W> {
+impl Point2 {
     pub const fn new(x: i32, y: i32) -> Self {
         Self {
-            phantom: PhantomData,
             x,
             y,
         }
@@ -56,41 +48,41 @@ impl<W> Point<W> {
     }
 }
 
-impl<W> std::fmt::Debug for Point<W> {
+impl std::fmt::Debug for Point2 {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{{ x: {}, y: {} }}", self.x, self.y)
     }
 }
 
-impl<W> Add for Point<W> {
-    type Output = Point<W>;
+impl Add for Point2 {
+    type Output = Point2;
 
     fn add(self, rhs: Self) -> Self::Output {
-        Point::new(self.x + rhs.x, self.y + rhs.y)
+        Self::Output::new(self.x + rhs.x, self.y + rhs.y)
     }
 }
 
-impl<W> Add for &Point<W> {
-    type Output = Point<W>;
+impl Add for &Point2 {
+    type Output = Point2;
 
     fn add(self, rhs: Self) -> Self::Output {
-        Point::new(self.x + rhs.x, self.y + rhs.y)
+        Self::Output::new(self.x + rhs.x, self.y + rhs.y)
     }
 }
 
-impl<W> Sub for Point<W> {
-    type Output = Point<W>;
+impl Sub for Point2 {
+    type Output = Point2;
 
     fn sub(self, rhs: Self) -> Self::Output {
-        Point::new(self.x - rhs.x, self.y - rhs.y)
+        Self::Output::new(self.x - rhs.x, self.y - rhs.y)
     }
 }
 
-impl<W> Sub for &Point<W> {
-    type Output = Point<W>;
+impl Sub for &Point2 {
+    type Output = Point2;
 
     fn sub(self, rhs: Self) -> Self::Output {
-        Point::new(self.x - rhs.x, self.y - rhs.y)
+        Self::Output::new(self.x - rhs.x, self.y - rhs.y)
     }
 }
 

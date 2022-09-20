@@ -1,9 +1,8 @@
 use super::Renderer;
 use crate::common::color::Color;
 use crate::common::point::Point;
+use crate::common::DEBUG_INFO_PAGE_TOTAL;
 use crate::state::State;
-
-pub const DEBUG_INFO_PAGE_TOTAL: i32 = 1;
 
 impl Renderer {
     pub fn draw_debug_info(&mut self, state: &State) {

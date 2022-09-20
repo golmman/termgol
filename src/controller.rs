@@ -91,6 +91,7 @@ impl Controller {
         match event {
             TerminalEvent::Key(key) => match key {
                 Key::Char('q') => return false,
+
                 Key::Char('h') => self.state.move_cursor_left(),
                 Key::Char('l') => self.state.move_cursor_right(),
                 Key::Char('k') => self.state.move_cursor_up(),

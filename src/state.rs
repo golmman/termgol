@@ -1,5 +1,5 @@
 use crate::common::point::Point;
-use crate::renderer::draw_debug_info::DEBUG_INFO_PAGE_TOTAL;
+use crate::common::DEBUG_INFO_PAGE_TOTAL;
 
 pub struct State {
     pub debug_info_page: i32,

@@ -80,6 +80,9 @@ impl Controller {
     }
 
     fn send_interrupt_events(sync_sender: SyncSender<TerminalEvent>) {
+        // this only exists as a fail safe, terminals in raw mode have to
+        // interpret ctrl+c during normal key event handling, so this does
+        // nothing in raw mode
         let _ = unsafe {
             signal_hook::low_level::register(signal_hook::consts::SIGINT, move || {
                 sync_sender

@@ -2,8 +2,8 @@ use crate::common::point::Point;
 use crate::screen::DefaultScreen;
 use crate::state::State;
 
-mod debug_info;
 mod cursor;
+mod debug_info;
 
 pub struct Renderer {
     screen: DefaultScreen,

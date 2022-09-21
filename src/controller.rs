@@ -51,10 +51,12 @@ impl Controller {
 
         let elapse_sender = self.sender.clone();
         let key_sender = self.sender.clone();
+        let interrupt_sender = self.sender.clone();
         let resize_sender = self.sender.clone();
 
         thread::spawn(move || Controller::send_elapse_events(elapse_sender));
         thread::spawn(move || Controller::send_key_events(key_sender));
+        thread::spawn(move || Controller::send_interrupt_events(interrupt_sender));
         thread::spawn(move || Controller::send_resize_events(resize_sender));
 
         self.renderer.display(&self.state);
@@ -77,6 +79,16 @@ impl Controller {
         }
     }
 
+    fn send_interrupt_events(sync_sender: SyncSender<TerminalEvent>) {
+        let _ = unsafe {
+            signal_hook::low_level::register(signal_hook::consts::SIGINT, move || {
+                sync_sender
+                    .send(TerminalEvent::Key(Key::Char('q')))
+                    .unwrap();
+            })
+        };
+    }
+
     fn send_resize_events(sync_sender: SyncSender<TerminalEvent>) {
         let _ = unsafe {
             signal_hook::low_level::register(signal_hook::consts::SIGWINCH, move || {
@@ -91,6 +103,7 @@ impl Controller {
         match event {
             TerminalEvent::Key(key) => match key {
                 Key::Char('q') => return false,
+                Key::Ctrl('c') => return false,
 
                 Key::Char('h') => self.state.move_cursor_left(),
                 Key::Char('l') => self.state.move_cursor_right(),

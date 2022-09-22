@@ -3,6 +3,8 @@ use crate::common::point::Point;
 pub struct World {
     pub size: Point,
     pub cells: Vec<u32>,
+    pub birth_rule: Vec<u32>,
+    pub survival_rule: Vec<u32>,
 }
 
 impl World {
@@ -10,6 +12,8 @@ impl World {
         Self {
             size: Point::new(0, 0),
             cells: Vec::new(),
+            birth_rule: vec![3],
+            survival_rule: vec![2, 3],
         }
     }
 
@@ -35,13 +39,23 @@ impl World {
                 let neighbour_cell_count = self.count_neighbor_cells(&Point::new(x, y));
 
                 if cell == 0 {
-                    if neighbour_cell_count == 3 {
+                    if self
+                        .birth_rule
+                        .iter()
+                        .find(|&&count| count == neighbour_cell_count)
+                        .is_some()
+                    {
                         new_cells[i] = 1;
                     } else {
                         new_cells[i] = 0;
                     }
                 } else {
-                    if neighbour_cell_count == 2 || neighbour_cell_count == 3 {
+                    if self
+                        .survival_rule
+                        .iter()
+                        .find(|&&count| count == neighbour_cell_count)
+                        .is_some()
+                    {
                         new_cells[i] = 1;
                     } else {
                         new_cells[i] = 0;
@@ -53,7 +67,7 @@ impl World {
         self.cells = new_cells;
     }
 
-    fn count_neighbor_cells(&self, p: &Point) -> i32 {
+    fn count_neighbor_cells(&self, p: &Point) -> u32 {
         let mut count = 0;
         let neighbour_indices = self.get_neighbour_indices(p);
 

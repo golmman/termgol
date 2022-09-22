@@ -4,6 +4,7 @@ use crate::state::State;
 
 mod cursor;
 mod debug_info;
+mod world;
 
 pub struct Renderer {
     screen: DefaultScreen,
@@ -28,6 +29,7 @@ impl Renderer {
     pub fn display(&mut self, state: &State) {
         self.screen.clear();
 
+        self.draw_world(state);
         self.draw_debug_info(state);
         self.draw_cursor(state);
 

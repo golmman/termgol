@@ -1,11 +1,17 @@
 use crate::common::point::Point;
 use crate::common::DEBUG_INFO_PAGE_TOTAL;
 
+use self::world::World;
+
+mod world;
+
 pub struct State {
     pub debug_info_page: i32,
     pub cursor_pos: Point,
     pub elapsed_time: u64,
     pub screen_size: Point,
+
+    pub world: World,
 }
 
 impl State {
@@ -18,15 +24,18 @@ impl State {
             cursor_pos: Point::new(0, 0),
             elapsed_time,
             screen_size: Point::new(0, 0),
+            world: World::new(),
         }
     }
 
     pub fn resize(&mut self, screen_size: &Point) {
         self.screen_size = screen_size.clone();
+        self.world.resize(screen_size);
     }
 
     pub fn elapse_time(&mut self) {
         self.elapsed_time += 1;
+        self.world.update();
     }
 
     pub fn debug_info_next_page(&mut self) {

@@ -32,8 +32,24 @@ impl Point {
         Self::new(self.x, self.y - 1)
     }
 
+    pub fn up_left(&self) -> Self {
+        Self::new(self.x - 1, self.y - 1)
+    }
+
+    pub fn up_right(&self) -> Self {
+        Self::new(self.x + 1, self.y - 1)
+    }
+
     pub fn down(&self) -> Self {
         Self::new(self.x, self.y + 1)
+    }
+
+    pub fn down_left(&self) -> Self {
+        Self::new(self.x - 1, self.y + 1)
+    }
+
+    pub fn down_right(&self) -> Self {
+        Self::new(self.x + 1, self.y + 1)
     }
 }
 

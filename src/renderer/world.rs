@@ -1,4 +1,7 @@
-use crate::{state::State, common::{point::Point, color::Color}};
+use crate::{
+    common::{color::Color, point::Point},
+    state::State,
+};
 
 use super::Renderer;
 

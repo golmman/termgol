@@ -27,7 +27,10 @@ impl Renderer {
         self.draw_next_line(format!(
             //"\x1b[1m{}/{} {}\x1b[22m",
             "{}/{} {} {}",
-            state.debug_info_page, DEBUG_INFO_PAGE_TOTAL, text, -12 % 7
+            state.debug_info_page,
+            DEBUG_INFO_PAGE_TOTAL,
+            text,
+            -12 % 7
         ));
     }
 

@@ -18,15 +18,20 @@ impl World {
     }
 
     pub fn resize(&mut self, size: &Point) {
-        self.cells = vec![0; (size.width() * size.height()) as usize];
-
-        self.cells[(size.width() * 5 + 3) as usize] = 1;
-        self.cells[(size.width() * 5 + 4) as usize] = 1;
-        self.cells[(size.width() * 6 + 4) as usize] = 1;
-        self.cells[(size.width() * 6 + 5) as usize] = 1;
-        self.cells[(size.width() * 7 + 4) as usize] = 1;
-
         self.size = size.clone();
+
+        self.setup_r_pentonimo();
+    }
+
+    fn setup_r_pentonimo(&mut self) {
+        let center = Point::new(self.size.width() / 2, self.size.height() / 2);
+
+        self.cells = vec![0; (self.size.width() * self.size.height()) as usize];
+        self.cells[(self.size.width() * (center.y - 1) + (center.x - 1)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y - 1) + center.x) as usize] = 1;
+        self.cells[(self.size.width() * center.y + center.x) as usize] = 1;
+        self.cells[(self.size.width() * center.y + (center.x + 1)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y + 1) + center.x) as usize] = 1;
     }
 
     pub fn update(&mut self) {

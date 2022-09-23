@@ -8,6 +8,7 @@ mod world;
 pub struct State {
     pub debug_info_page: i32,
     pub cursor_pos: Point,
+    pub cursor_active: bool,
     pub elapsed_time: u64,
     pub screen_size: Point,
 
@@ -22,6 +23,7 @@ impl State {
         Self {
             debug_info_page: 1,
             cursor_pos: Point::new(0, 0),
+            cursor_active: true,
             elapsed_time,
             screen_size: Point::new(0, 0),
             world: World::new(),
@@ -38,6 +40,10 @@ impl State {
         self.world.update();
     }
 
+    pub fn toggle_cursor_active(&mut self) {
+        self.cursor_active = !self.cursor_active;
+    }
+
     pub fn debug_info_next_page(&mut self) {
         self.debug_info_page += 1;
 
@@ -47,6 +53,10 @@ impl State {
     }
 
     pub fn move_cursor_left(&mut self) {
+        if !self.cursor_active {
+            return;
+        }
+
         self.cursor_pos.x -= 1;
 
         if self.cursor_pos.x <= 0 {
@@ -55,6 +65,10 @@ impl State {
     }
 
     pub fn move_cursor_right(&mut self) {
+        if !self.cursor_active {
+            return;
+        }
+
         self.cursor_pos.x += 1;
 
         if self.cursor_pos.x >= self.screen_size.width() - 1 {
@@ -63,6 +77,10 @@ impl State {
     }
 
     pub fn move_cursor_up(&mut self) {
+        if !self.cursor_active {
+            return;
+        }
+
         self.cursor_pos.y -= 1;
 
         if self.cursor_pos.y <= 0 {
@@ -71,6 +89,10 @@ impl State {
     }
 
     pub fn move_cursor_down(&mut self) {
+        if !self.cursor_active {
+            return;
+        }
+
         self.cursor_pos.y += 1;
 
         if self.cursor_pos.y >= self.screen_size.height() - 1 {

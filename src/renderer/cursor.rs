@@ -1,7 +1,4 @@
-use crate::{
-    common::{color::Color, point::Point},
-    state::State,
-};
+use crate::{common::point::Point, state::State};
 
 use super::Renderer;
 
@@ -11,7 +8,6 @@ impl Renderer {
             return;
         }
 
-        let color = Color { bg: 2, fg: 2 };
         let position = Point::from(state.cursor_pos.clone());
 
         self.screen

@@ -27,12 +27,10 @@ pub struct Controller {
     state: State,
 }
 
-impl Controller {
-    pub fn new() -> Self {
+impl From<State> for Controller {
+    fn from(state: State) -> Self {
         let (sender, receiver) = sync_channel::<TerminalEvent>(1024);
         let renderer = Renderer::new();
-
-        let state = State::new();
 
         Self {
             receiver,
@@ -41,7 +39,9 @@ impl Controller {
             state,
         }
     }
+}
 
+impl Controller {
     pub fn run(&mut self) {
         self.resize();
         self.state.cursor_pos = Point::new(

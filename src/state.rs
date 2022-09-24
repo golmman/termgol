@@ -1,3 +1,4 @@
+use crate::args::Args;
 use crate::common::point::Point;
 use crate::common::DEBUG_INFO_PAGE_TOTAL;
 
@@ -6,6 +7,7 @@ use self::world::World;
 mod world;
 
 pub struct State {
+    pub args: Args,
     pub debug_info_page: i32,
     pub cursor_pos: Point,
     pub pause: bool,
@@ -15,21 +17,21 @@ pub struct State {
     pub world: World,
 }
 
-impl State {
-    #[allow(clippy::new_without_default)]
-    pub fn new() -> Self {
-        let elapsed_time = 0;
-
+impl From<Args> for State {
+    fn from(args: Args) -> Self {
         Self {
+            args,
             debug_info_page: 0,
             cursor_pos: Point::new(0, 0),
             pause: false,
-            elapsed_time,
+            elapsed_time: 0,
             screen_size: Point::new(0, 0),
             world: World::new(),
         }
     }
+}
 
+impl State {
     pub fn resize(&mut self, screen_size: &Point) {
         self.screen_size = screen_size.clone();
         self.world.resize(screen_size);

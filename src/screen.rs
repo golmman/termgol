@@ -64,6 +64,17 @@ impl DefaultScreen {
         }
     }
 
+    pub fn draw_text_transparent(&mut self, p: Point, fg_color: u8, text: String) {
+        let index = (self.size.width() * p.y + p.x) as usize;
+        for (i, ch) in text.chars().enumerate() {
+            let color = Color {
+                bg: self.pixel_buffer[index + i].color.bg,
+                fg: fg_color,
+            };
+            self.pixel_buffer[index + i] = Pixel { ch, color };
+        }
+    }
+
     pub fn display(&mut self) {
         let mut s = String::new();
 

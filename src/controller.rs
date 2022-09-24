@@ -113,8 +113,10 @@ impl Controller {
                 Key::Char('k') => self.state.move_cursor_up(),
                 Key::Char('j') => self.state.move_cursor_down(),
 
-                Key::Char('c') => self.state.toggle_cursor_active(),
+                Key::Char('p') => self.state.toggle_pause(),
                 Key::Char('d') => self.state.debug_info_next_page(),
+
+                Key::Char(' ') => self.state.toggle_live_at_cursor(),
 
                 _ => {}
             },

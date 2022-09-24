@@ -8,7 +8,7 @@ mod world;
 pub struct State {
     pub debug_info_page: i32,
     pub cursor_pos: Point,
-    pub cursor_active: bool,
+    pub pause: bool,
     pub elapsed_time: u64,
     pub screen_size: Point,
 
@@ -23,7 +23,7 @@ impl State {
         Self {
             debug_info_page: 1,
             cursor_pos: Point::new(0, 0),
-            cursor_active: true,
+            pause: true,
             elapsed_time,
             screen_size: Point::new(0, 0),
             world: World::new(),
@@ -36,12 +36,21 @@ impl State {
     }
 
     pub fn elapse_time(&mut self) {
+        if self.pause {
+            return;
+        }
+
         self.elapsed_time += 1;
         self.world.update();
     }
 
-    pub fn toggle_cursor_active(&mut self) {
-        self.cursor_active = !self.cursor_active;
+    pub fn toggle_pause(&mut self) {
+        self.pause = !self.pause;
+    }
+
+    pub fn toggle_live_at_cursor(&mut self) {
+        let i = (self.world.size.width() * self.cursor_pos.y + self.cursor_pos.x) as usize;
+        self.world.cells[i] = 1 - self.world.cells[i];
     }
 
     pub fn debug_info_next_page(&mut self) {
@@ -53,7 +62,7 @@ impl State {
     }
 
     pub fn move_cursor_left(&mut self) {
-        if !self.cursor_active {
+        if !self.pause {
             return;
         }
 
@@ -65,7 +74,7 @@ impl State {
     }
 
     pub fn move_cursor_right(&mut self) {
-        if !self.cursor_active {
+        if !self.pause {
             return;
         }
 
@@ -77,7 +86,7 @@ impl State {
     }
 
     pub fn move_cursor_up(&mut self) {
-        if !self.cursor_active {
+        if !self.pause {
             return;
         }
 
@@ -89,7 +98,7 @@ impl State {
     }
 
     pub fn move_cursor_down(&mut self) {
-        if !self.cursor_active {
+        if !self.pause {
             return;
         }
 

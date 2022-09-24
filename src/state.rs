@@ -18,12 +18,14 @@ pub struct State {
 
 impl From<Args> for State {
     fn from(args: Args) -> Self {
+        let pause = args.paused;
+
         Self {
             args,
             cursor_pos: Point::new(0, 0),
             debug_info_page: 0,
             elapsed_time: 0,
-            pause: false,
+            pause,
             screen_size: Point::new(0, 0),
             world: World::new(),
         }

@@ -10,7 +10,6 @@ use termion::event::Key;
 use termion::input::TermRead;
 
 use crate::common::point::Point;
-use crate::common::FRAMES_PER_SECOND;
 use crate::renderer::Renderer;
 use crate::state::State;
 
@@ -49,12 +48,14 @@ impl Controller {
             self.state.screen_size.height() / 2,
         );
 
+        let fps = self.state.args.frames_per_second;
+
         let elapse_sender = self.sender.clone();
         let key_sender = self.sender.clone();
         let interrupt_sender = self.sender.clone();
         let resize_sender = self.sender.clone();
 
-        thread::spawn(move || Controller::send_elapse_events(elapse_sender));
+        thread::spawn(move || Controller::send_elapse_events(elapse_sender, fps));
         thread::spawn(move || Controller::send_key_events(key_sender));
         thread::spawn(move || Controller::send_interrupt_events(interrupt_sender));
         thread::spawn(move || Controller::send_resize_events(resize_sender));
@@ -64,9 +65,9 @@ impl Controller {
         while self.receive_event() {}
     }
 
-    fn send_elapse_events(sender: SyncSender<TerminalEvent>) {
+    fn send_elapse_events(sender: SyncSender<TerminalEvent>, fps: u16) {
         loop {
-            sleep(Duration::from_millis(1000 / FRAMES_PER_SECOND as u64));
+            sleep(Duration::from_millis(1000 / fps as u64));
             let _ = sender.send(TerminalEvent::Elapse);
         }
     }

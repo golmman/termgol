@@ -1,10 +1,8 @@
-use args::Args;
 use clap::Parser;
+use common::args::Args;
+use controller::Controller;
 use state::State;
 
-use crate::controller::Controller;
-
-mod args;
 mod common;
 mod controller;
 mod renderer;

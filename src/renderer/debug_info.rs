@@ -26,11 +26,8 @@ impl Renderer {
 
         self.draw_next_line(format!(
             //"\x1b[1m{}/{} {}\x1b[22m",
-            "{}/{} {} {}",
-            state.debug_info_page,
-            DEBUG_INFO_PAGE_TOTAL,
-            text,
-            -12 % 7
+            "{}/{} {}",
+            state.debug_info_page, DEBUG_INFO_PAGE_TOTAL, text,
         ));
     }
 
@@ -38,11 +35,9 @@ impl Renderer {
         self.draw_page_info(state, "General");
 
         self.draw_next_line(format!(
-            "cols: {}, rows: {}, tiles_x: {}, tiles_y: {}, time: {}",
+            "cols: {}, rows: {}, time: {}",
             self.screen.size.width(),
             self.screen.size.height(),
-            state.screen_size.width(),
-            state.screen_size.height(),
             state.elapsed_time,
         ));
 

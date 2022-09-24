@@ -21,9 +21,9 @@ impl State {
         let elapsed_time = 0;
 
         Self {
-            debug_info_page: 1,
+            debug_info_page: 0,
             cursor_pos: Point::new(0, 0),
-            pause: true,
+            pause: false,
             elapsed_time,
             screen_size: Point::new(0, 0),
             world: World::new(),
@@ -48,7 +48,11 @@ impl State {
         self.pause = !self.pause;
     }
 
-    pub fn toggle_live_at_cursor(&mut self) {
+    pub fn toggle_life_at_cursor(&mut self) {
+        if !self.pause {
+            return;
+        }
+
         let i = (self.world.size.width() * self.cursor_pos.y + self.cursor_pos.x) as usize;
         self.world.cells[i] = 1 - self.world.cells[i];
     }

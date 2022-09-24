@@ -116,14 +116,12 @@ impl Controller {
                 Key::Char('p') => self.state.toggle_pause(),
                 Key::Char('d') => self.state.debug_info_next_page(),
 
-                Key::Char(' ') => self.state.toggle_live_at_cursor(),
+                Key::Char(' ') => self.state.toggle_life_at_cursor(),
 
                 _ => {}
             },
             TerminalEvent::Resize => self.resize(),
-            TerminalEvent::Elapse => {
-                self.state.elapse_time();
-            }
+            TerminalEvent::Elapse => self.state.elapse_time(),
         }
 
         self.renderer.display(&self.state);

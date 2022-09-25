@@ -48,6 +48,7 @@ impl Controller {
             self.state.screen_size.height() / 2,
         );
 
+        let delay = self.state.args.delay;
         let fps = self.state.args.frames_per_second;
 
         let elapse_sender = self.sender.clone();
@@ -55,7 +56,7 @@ impl Controller {
         let interrupt_sender = self.sender.clone();
         let resize_sender = self.sender.clone();
 
-        thread::spawn(move || Controller::send_elapse_events(elapse_sender, fps));
+        thread::spawn(move || Controller::send_elapse_events(elapse_sender, delay, fps));
         thread::spawn(move || Controller::send_key_events(key_sender));
         thread::spawn(move || Controller::send_interrupt_events(interrupt_sender));
         thread::spawn(move || Controller::send_resize_events(resize_sender));
@@ -65,7 +66,9 @@ impl Controller {
         while self.receive_event() {}
     }
 
-    fn send_elapse_events(sender: SyncSender<TerminalEvent>, fps: u16) {
+    fn send_elapse_events(sender: SyncSender<TerminalEvent>, delay: u64, fps: u16) {
+        sleep(Duration::from_millis(delay));
+
         loop {
             sleep(Duration::from_millis(1000 / fps as u64));
             let _ = sender.send(TerminalEvent::Elapse);

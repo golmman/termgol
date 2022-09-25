@@ -15,6 +15,10 @@ pub struct Args {
     #[clap(short, long, value_enum, default_value = "r-pentonimo")]
     pub cell_setup: CellSetup,
 
+    /// Set the initial delay in milliseconds before the life starts evolving
+    #[clap(short, long, value_parser, default_value_t = 1000)]
+    pub delay: u64,
+
     /// Set the frames per second
     #[clap(short, long, value_parser, default_value_t = 10)]
     pub frames_per_second: u16,

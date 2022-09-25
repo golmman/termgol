@@ -2,10 +2,13 @@
 
 ## Features
 * pause and drawing
-* cell setups
+* predefined cell setups
+* delay
+* frames per second
 
 ## Ideas
 * fading cells
 * rules
 * screensaver mode
 * toroidal or sheet world
+* cell setups from files

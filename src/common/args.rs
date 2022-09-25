@@ -1,11 +1,10 @@
-use std::fmt::Display;
-
 use clap::Parser;
 
-#[derive(clap::ValueEnum, Clone, Debug)]
-pub enum DemoWorld {
-    RPentonimo,
+#[derive(clap::ValueEnum, Clone, Copy, Debug)]
+pub enum CellSetup {
+    Acorn,
     Blank,
+    RPentonimo,
 }
 
 #[derive(Parser, Debug)]
@@ -13,7 +12,7 @@ pub enum DemoWorld {
 pub struct Args {
     /// Load a demo world
     #[clap(short, long, value_enum, default_value = "r-pentonimo")]
-    pub demo_world: DemoWorld,
+    pub cell_setup: CellSetup,
 
     /// Set the frames per second
     #[clap(short, long, value_parser, default_value_t = 10)]

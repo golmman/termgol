@@ -1,32 +1,62 @@
-use crate::common::point::Point;
+use crate::common::{args::CellSetup, point::Point};
 
 pub struct World {
-    pub size: Point,
-    pub cells: Vec<u32>,
+    pub cell_setup: CellSetup,
     pub birth_rule: Vec<u32>,
+    pub cells: Vec<u32>,
+    pub size: Point,
     pub survival_rule: Vec<u32>,
 }
 
-impl World {
-    pub fn new() -> Self {
+impl From<CellSetup> for World {
+    fn from(cell_setup: CellSetup) -> Self {
         Self {
-            size: Point::new(0, 0),
-            cells: Vec::new(),
+            cell_setup,
             birth_rule: vec![3],
+            cells: Vec::new(),
+            size: Point::new(0, 0),
             survival_rule: vec![2, 3],
         }
     }
+}
 
+impl World {
     pub fn resize(&mut self, size: &Point) {
         self.size = size.clone();
 
-        self.setup_r_pentonimo();
+        self.setup_cells();
+    }
+
+    pub fn setup_cells(&mut self) {
+        match self.cell_setup {
+            CellSetup::Acorn => self.setup_acorn(),
+            CellSetup::Blank => self.setup_blank(),
+            CellSetup::RPentonimo => self.setup_r_pentonimo(),
+        }
+    }
+
+    fn setup_acorn(&mut self) {
+        self.setup_blank();
+
+        let center = Point::new(self.size.width() / 2, self.size.height() / 2);
+
+        self.cells[(self.size.width() * (center.y - 1) + (center.x - 2)) as usize] = 1;
+        self.cells[(self.size.width() * center.y + center.x) as usize] = 1;
+        self.cells[(self.size.width() * (center.y + 1) + (center.x - 3)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y + 1) + (center.x - 2)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y + 1) + (center.x + 1)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y + 1) + (center.x + 2)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y + 1) + (center.x + 3)) as usize] = 1;
+    }
+
+    fn setup_blank(&mut self) {
+        self.cells = vec![0; (self.size.width() * self.size.height()) as usize];
     }
 
     fn setup_r_pentonimo(&mut self) {
-        let center = Point::new(self.size.width() / 2, self.size.height() / 2);
+        self.setup_blank();
 
-        self.cells = vec![0; (self.size.width() * self.size.height()) as usize];
+        let center = Point::new(self.size.width() / 2, self.size.height() / 2);
         self.cells[(self.size.width() * (center.y - 1) + (center.x - 1)) as usize] = 1;
         self.cells[(self.size.width() * (center.y - 1) + center.x) as usize] = 1;
         self.cells[(self.size.width() * center.y + center.x) as usize] = 1;

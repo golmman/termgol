@@ -32,6 +32,7 @@ impl World {
             CellSetup::Acorn => self.setup_acorn(),
             CellSetup::Blank => self.setup_blank(),
             CellSetup::RPentonimo => self.setup_r_pentonimo(),
+            CellSetup::Termgol => self.setup_termgol(),
         }
     }
 
@@ -62,6 +63,114 @@ impl World {
         self.cells[(self.size.width() * center.y + center.x) as usize] = 1;
         self.cells[(self.size.width() * center.y + (center.x + 1)) as usize] = 1;
         self.cells[(self.size.width() * (center.y + 1) + center.x) as usize] = 1;
+    }
+
+    fn setup_termgol(&mut self) {
+        self.setup_blank();
+
+        let center = Point::new(self.size.width() / 2, self.size.height() / 2);
+
+        // T
+        self.cells[(self.size.width() * (center.y - 2) + (center.x - 20)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y - 2) + (center.x - 19)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y - 2) + (center.x - 18)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y - 2) + (center.x - 17)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y - 2) + (center.x - 16)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y - 1) + (center.x - 18)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y - 0) + (center.x - 18)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y + 1) + (center.x - 18)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y + 2) + (center.x - 18)) as usize] = 1;
+
+        // E
+        self.cells[(self.size.width() * (center.y - 2) + (center.x - 14)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y - 2) + (center.x - 13)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y - 2) + (center.x - 12)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y - 2) + (center.x - 11)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y - 2) + (center.x - 10)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y - 1) + (center.x - 14)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y - 0) + (center.x - 14)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y - 0) + (center.x - 13)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y - 0) + (center.x - 12)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y - 0) + (center.x - 11)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y - 0) + (center.x - 10)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y + 1) + (center.x - 14)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y + 2) + (center.x - 14)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y + 2) + (center.x - 13)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y + 2) + (center.x - 12)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y + 2) + (center.x - 11)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y + 2) + (center.x - 10)) as usize] = 1;
+
+        // R
+        self.cells[(self.size.width() * (center.y - 2) + (center.x - 8)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y - 2) + (center.x - 7)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y - 2) + (center.x - 6)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y - 2) + (center.x - 5)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y - 1) + (center.x - 8)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y - 1) + (center.x - 4)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y - 0) + (center.x - 8)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y - 0) + (center.x - 7)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y - 0) + (center.x - 6)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y - 0) + (center.x - 5)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y + 1) + (center.x - 8)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y + 1) + (center.x - 6)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y + 2) + (center.x - 8)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y + 2) + (center.x - 5)) as usize] = 1;
+
+        // M
+        self.cells[(self.size.width() * (center.y - 2) + (center.x - 2)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y - 2) + (center.x + 2)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y - 1) + (center.x - 2)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y - 1) + (center.x - 1)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y - 1) + (center.x + 1)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y - 1) + (center.x + 2)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y - 0) + (center.x - 2)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y - 0) + (center.x + 0)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y - 0) + (center.x + 2)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y + 1) + (center.x - 2)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y + 1) + (center.x + 2)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y + 2) + (center.x - 2)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y + 2) + (center.x + 2)) as usize] = 1;
+
+        // G
+        self.cells[(self.size.width() * (center.y - 2) + (center.x + 5)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y - 2) + (center.x + 6)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y - 2) + (center.x + 7)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y - 2) + (center.x + 8)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y - 1) + (center.x + 4)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y - 0) + (center.x + 4)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y - 0) + (center.x + 7)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y - 0) + (center.x + 8)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y + 1) + (center.x + 4)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y + 1) + (center.x + 8)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y + 2) + (center.x + 5)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y + 2) + (center.x + 6)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y + 2) + (center.x + 7)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y + 2) + (center.x + 8)) as usize] = 1;
+
+        // O
+        self.cells[(self.size.width() * (center.y - 2) + (center.x + 11)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y - 2) + (center.x + 12)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y - 2) + (center.x + 13)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y - 1) + (center.x + 10)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y - 1) + (center.x + 14)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y - 0) + (center.x + 10)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y - 0) + (center.x + 14)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y + 1) + (center.x + 10)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y + 1) + (center.x + 14)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y + 2) + (center.x + 11)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y + 2) + (center.x + 12)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y + 2) + (center.x + 13)) as usize] = 1;
+
+        // L
+        self.cells[(self.size.width() * (center.y - 2) + (center.x + 16)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y - 1) + (center.x + 16)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y - 0) + (center.x + 16)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y + 1) + (center.x + 16)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y + 2) + (center.x + 16)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y + 2) + (center.x + 17)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y + 2) + (center.x + 18)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y + 2) + (center.x + 19)) as usize] = 1;
+        self.cells[(self.size.width() * (center.y + 2) + (center.x + 20)) as usize] = 1;
     }
 
     pub fn update(&mut self) {

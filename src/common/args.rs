@@ -5,12 +5,13 @@ pub enum CellSetup {
     Acorn,
     Blank,
     RPentonimo,
+    Termgol,
 }
 
 #[derive(Parser, Debug)]
 #[clap(author, version, about, long_about = None)]
 pub struct Args {
-    /// Load a demo world
+    /// Load a world with a cell setup
     #[clap(short, long, value_enum, default_value = "r-pentonimo")]
     pub cell_setup: CellSetup,
 

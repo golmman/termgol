@@ -90,9 +90,3 @@ impl Sub for &Point {
         Self::Output::new(self.x - rhs.x, self.y - rhs.y)
     }
 }
-
-#[cfg(test)]
-mod test {
-    #[test]
-    fn test_calc_array_bounds() {}
-}

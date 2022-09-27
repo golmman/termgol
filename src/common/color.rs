@@ -8,35 +8,53 @@
 use std::fmt::Display;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
+pub struct Rgb {
+    pub r: u8,
+    pub g: u8,
+    pub b: u8,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Color {
-    pub bg: u8,
-    pub fg: u8,
+    pub bg: Rgb,
+    pub fg: Rgb,
 }
 
 impl Color {
     pub const RESET: &'static str = "\x1b[0m";
 
-    pub const fn new(bg_color: u8, fg_color: u8) -> Self {
+    pub const fn null() -> Self {
         Self {
-            bg: bg_color,
-            fg: fg_color,
+            bg: Rgb { r: 0, g: 0, b: 0 },
+            fg: Rgb { r: 0, g: 0, b: 0 },
         }
     }
 
-    pub const fn null() -> Self {
-        Self { bg: 0, fg: 0 }
-    }
-
     pub const fn text() -> Self {
-        Self { bg: 0, fg: 7 }
+        Self {
+            bg: Rgb { r: 0, g: 0, b: 0 },
+            fg: Rgb {
+                r: 200,
+                g: 200,
+                b: 200,
+            },
+        }
     }
 }
 
 impl From<&Color> for String {
     fn from(color: &Color) -> Self {
-        let fg_color = color.fg;
-        let bg_color = color.bg;
-        format!("\x1b[38;5;{fg_color};48;5;{bg_color}m")
+        let Rgb {
+            r: fg_r,
+            g: fg_g,
+            b: fg_b,
+        } = color.fg;
+        let Rgb {
+            r: bg_r,
+            g: bg_g,
+            b: bg_b,
+        } = color.bg;
+        format!("\x1b[38;2;{fg_r};{fg_g};{fg_b};48;2;{bg_r};{bg_b};{bg_g}m")
     }
 }
 

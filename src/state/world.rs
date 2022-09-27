@@ -1,7 +1,13 @@
 use crate::common::{
     args::{Args, CellSetup},
+    color::Color,
     point::Point,
 };
+
+pub struct Cell {
+    pub alive: bool,
+    pub color: Color,
+}
 
 pub struct World {
     pub cell_setup: CellSetup,

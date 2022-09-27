@@ -1,4 +1,7 @@
-use crate::{common::point::Point, state::State};
+use crate::{
+    common::{color::Rgb, point::Point},
+    state::State,
+};
 
 use super::Renderer;
 
@@ -10,7 +13,14 @@ impl Renderer {
 
         let position = Point::from(state.cursor_pos.clone());
 
-        self.screen
-            .draw_text_transparent(position, 7, String::from("X"));
+        self.screen.draw_text_transparent(
+            position,
+            Rgb {
+                r: 255,
+                g: 255,
+                b: 255,
+            },
+            String::from("X"),
+        );
     }
 }

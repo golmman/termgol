@@ -6,6 +6,7 @@ use termion::raw::IntoRawMode;
 use termion::raw::RawTerminal;
 
 use crate::common::color::Color;
+use crate::common::color::Rgb;
 use crate::common::point::Point;
 
 pub type DefaultScreen = Screen<RawTerminal<Stdout>>;
@@ -64,7 +65,7 @@ impl DefaultScreen {
         }
     }
 
-    pub fn draw_text_transparent(&mut self, p: Point, fg_color: u8, text: String) {
+    pub fn draw_text_transparent(&mut self, p: Point, fg_color: Rgb, text: String) {
         let index = (self.size.width() * p.y + p.x) as usize;
         for (i, ch) in text.chars().enumerate() {
             let color = Color {

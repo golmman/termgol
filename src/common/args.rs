@@ -84,7 +84,7 @@ mod test {
 
     #[test]
     fn it_fails_when_the_regex_is_not_matched() {
-        let err = parse_rules("nonsense");
+        let err = Rules::parse("nonsense");
         assert!(err.is_err());
         assert_eq!(err.unwrap_err().kind(), ErrorKind::InvalidValue);
     }

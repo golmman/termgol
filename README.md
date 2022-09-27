@@ -7,9 +7,11 @@
 - delay
 - frames per second
 - rules
+- 24 bit colors
 
 ## Ideas
 
+- customizable live and dead cell color
 - fading cells
 - screensaver mode
 - toroidal or sheet world

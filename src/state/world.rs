@@ -1,8 +1,4 @@
-use crate::common::{
-    args::{Args, CellSetup},
-    color::Color,
-    point::Point,
-};
+use crate::common::{args::Args, cell_setup::CellSetup, color::Color, point::Point};
 
 pub struct Cell {
     pub alive: bool,

@@ -11,7 +11,11 @@ use super::Renderer;
 impl Renderer {
     pub fn draw_world(&mut self, state: &State) {
         let color = Color {
-            bg: Rgb { r: 200, g: 0, b: 0 },
+            bg: Rgb {
+                r: 200,
+                g: 110,
+                b: 0,
+            },
             fg: Rgb { r: 0, g: 0, b: 0 },
         };
 

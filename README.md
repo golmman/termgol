@@ -12,6 +12,7 @@
 ## Ideas
 
 - customizable live and dead cell color
+- customizable live and dead cell character
 - fading cells
 - screensaver mode
 - toroidal or sheet world

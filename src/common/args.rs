@@ -1,4 +1,4 @@
-use crate::common::{cell_setup::CellSetup, rules::Rules};
+use crate::common::{cell_setup::CellSetup, color::Rgb, rules::Rules};
 use clap::Parser;
 
 #[derive(Clone, Debug, Parser)]
@@ -7,6 +7,14 @@ pub struct Args {
     /// Load a world with a cell setup
     #[clap(short, long, value_enum, default_value = "r-pentonimo")]
     pub cell_setup: CellSetup,
+
+    /// Set the initial background color for living cells
+    #[clap(long, value_parser = Rgb::parse, default_value = "#EE8822")]
+    pub color_bg_alive: Rgb,
+
+    /// Set the initial background color for dead cells
+    #[clap(long, value_parser = Rgb::parse, default_value = "#112211")]
+    pub color_bg_dead: Rgb,
 
     /// Set the initial delay in milliseconds before the life starts evolving
     #[clap(short, long, value_parser, default_value_t = 1000)]

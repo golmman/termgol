@@ -1,4 +1,7 @@
-use crate::common::{args::CellSetup, point::Point};
+use crate::common::{
+    args::{Args, CellSetup},
+    point::Point,
+};
 
 pub struct World {
     pub cell_setup: CellSetup,
@@ -8,14 +11,14 @@ pub struct World {
     pub survival_rule: Vec<u32>,
 }
 
-impl From<CellSetup> for World {
-    fn from(cell_setup: CellSetup) -> Self {
+impl From<Args> for World {
+    fn from(args: Args) -> Self {
         Self {
-            cell_setup,
-            birth_rule: vec![3],
+            cell_setup: args.cell_setup,
+            birth_rule: args.rules.birth.clone(),
             cells: Vec::new(),
             size: Point::new(0, 0),
-            survival_rule: vec![2, 3],
+            survival_rule: args.rules.survival.clone(),
         }
     }
 }

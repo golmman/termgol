@@ -19,7 +19,7 @@ pub struct State {
 impl From<Args> for State {
     fn from(args: Args) -> Self {
         let pause = args.paused;
-        let cell_setup = args.cell_setup;
+        let args_clone = args.clone();
 
         Self {
             args,
@@ -28,7 +28,7 @@ impl From<Args> for State {
             elapsed_time: 0,
             pause,
             screen_size: Point::new(0, 0),
-            world: World::from(cell_setup),
+            world: World::from(args_clone),
         }
     }
 }

@@ -9,11 +9,11 @@
 - rules
 - 24 bit colors
 - customizable live and dead cell color
+- fading cells
 
 ## Ideas
 
 - customizable live and dead cell character
-- fading cells
 - screensaver mode
 - toroidal or sheet world
 - cell setups from files

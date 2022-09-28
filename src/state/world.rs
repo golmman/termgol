@@ -1,3 +1,5 @@
+use std::cmp::{max, min};
+
 use crate::common::{
     args::Args,
     cell_setup::CellSetup,
@@ -26,6 +28,7 @@ pub struct World {
     pub cells: Vec<Cell>,
     pub color_bg_alive: Rgb,
     pub color_bg_dead: Rgb,
+    pub fading_speed: i32,
     pub size: Point,
     pub survival_rule: Vec<u32>,
 }
@@ -38,6 +41,7 @@ impl From<Args> for World {
             cells: Vec::new(),
             color_bg_alive: args.color_bg_alive,
             color_bg_dead: args.color_bg_dead,
+            fading_speed: args.fading_speed,
             size: Point::new(0, 0),
             survival_rule: args.rules.survival.clone(),
         }
@@ -82,6 +86,37 @@ impl World {
             color: Color {
                 fg: Rgb::default(),
                 bg: self.color_bg_dead,
+            },
+        };
+
+        self.cells[i] = cell;
+    }
+
+    fn calc_fading_speed(&self, color_delta: i32) -> i32 {
+        if color_delta < 0 {
+            return max(-self.fading_speed, color_delta);
+        } else if color_delta > 0 {
+            return min(self.fading_speed, color_delta);
+        }
+
+        0
+    }
+
+    pub fn set_dead_fading(&mut self, i: usize) {
+        let Rgb { r, g, b } = self.cells[i].color.bg;
+        let fading_r = self.calc_fading_speed(self.color_bg_dead.r as i32 - r as i32);
+        let fading_g = self.calc_fading_speed(self.color_bg_dead.g as i32 - g as i32);
+        let fading_b = self.calc_fading_speed(self.color_bg_dead.b as i32 - b as i32);
+
+        let cell = Cell {
+            alive: false,
+            color: Color {
+                fg: Rgb::default(),
+                bg: Rgb {
+                    r: (r as i32 + fading_r) as u8,
+                    g: (g as i32 + fading_g) as u8,
+                    b: (b as i32 + fading_b) as u8,
+                },
             },
         };
 
@@ -258,7 +293,7 @@ impl World {
             if is_alive[i] {
                 self.set_alive(i);
             } else {
-                self.set_dead(i);
+                self.set_dead_fading(i);
             }
         }
     }

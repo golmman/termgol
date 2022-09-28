@@ -20,6 +20,14 @@ pub struct Args {
     #[clap(short, long, value_parser, default_value_t = 1000)]
     pub delay: u64,
 
+    /// Set the fading speed for dead cells:
+    /// 1 => very slow,
+    /// 255 => instant,
+    /// 0 => cells appear as if they are not dying,
+    /// negative values => funny colors
+    #[clap(long, value_parser, default_value_t = 140)]
+    pub fading_speed: i32,
+
     /// Set the frames per second
     #[clap(short, long, value_parser, default_value_t = 10)]
     pub frames_per_second: u16,

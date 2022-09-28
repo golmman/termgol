@@ -5,7 +5,7 @@
 // https://stackoverflow.com/questions/4842424/list-of-ansi-color-escape-sequences
 // https://gist.github.com/fnky/458719343aabd01cfb17a3a4f7296797
 
-use std::{fmt::Display, num::ParseIntError};
+use std::fmt::Display;
 
 use clap::{Command, Error, ErrorKind};
 
@@ -14,6 +14,12 @@ pub struct Rgb {
     pub r: u8,
     pub g: u8,
     pub b: u8,
+}
+
+impl Default for Rgb {
+    fn default() -> Self {
+        Self { r: 0, g: 0, b: 0 }
+    }
 }
 
 impl Rgb {
@@ -41,19 +47,21 @@ pub struct Color {
     pub fg: Rgb,
 }
 
+impl Default for Color {
+    fn default() -> Self {
+        Self {
+            bg: Default::default(),
+            fg: Default::default(),
+        }
+    }
+}
+
 impl Color {
     pub const RESET: &'static str = "\x1b[0m";
 
-    pub const fn null() -> Self {
+    pub fn text() -> Self {
         Self {
-            bg: Rgb { r: 0, g: 0, b: 0 },
-            fg: Rgb { r: 0, g: 0, b: 0 },
-        }
-    }
-
-    pub const fn text() -> Self {
-        Self {
-            bg: Rgb { r: 0, g: 0, b: 0 },
+            bg: Rgb::default(),
             fg: Rgb {
                 r: 200,
                 g: 200,
@@ -75,7 +83,7 @@ impl From<&Color> for String {
             g: bg_g,
             b: bg_b,
         } = color.bg;
-        format!("\x1b[38;2;{fg_r};{fg_g};{fg_b};48;2;{bg_r};{bg_b};{bg_g}m")
+        format!("\x1b[38;2;{fg_r};{fg_g};{fg_b};48;2;{bg_r};{bg_g};{bg_b}m")
     }
 }
 

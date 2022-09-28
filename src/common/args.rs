@@ -13,7 +13,7 @@ pub struct Args {
     pub color_bg_alive: Rgb,
 
     /// Set the initial background color for dead cells
-    #[clap(long, value_parser = Rgb::parse, default_value = "#112211")]
+    #[clap(long, value_parser = Rgb::parse, default_value = "#113011")]
     pub color_bg_dead: Rgb,
 
     /// Set the initial delay in milliseconds before the life starts evolving

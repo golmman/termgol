@@ -15,10 +15,7 @@ impl Default for Cell {
     fn default() -> Self {
         Self {
             alive: false,
-            color: Color {
-                bg: Rgb { r: 0, g: 0, b: 0 },
-                fg: Rgb { r: 0, g: 0, b: 0 },
-            },
+            color: Color::default(),
         }
     }
 }
@@ -63,28 +60,32 @@ impl World {
         }
     }
 
-    fn set_alive(&mut self, p: Point) {
+    pub fn set_alive(&mut self, i: usize) {
         let cell = Cell {
             alive: true,
             color: Color {
-                fg: Rgb { r: 0, g: 0, b: 0 },
+                fg: Rgb::default(),
                 bg: self.color_bg_alive,
             },
         };
 
-        self.cells[(self.size.width() * p.y + p.x) as usize] = cell;
+        self.cells[i] = cell;
     }
 
-    fn set_dead(&self, p: Point) {
+    fn set_alive_p(&mut self, p: Point) {
+        self.set_alive((self.size.width() * p.y + p.x) as usize);
+    }
+
+    pub fn set_dead(&mut self, i: usize) {
         let cell = Cell {
             alive: false,
             color: Color {
-                fg: Rgb { r: 0, g: 0, b: 0 },
+                fg: Rgb::default(),
                 bg: self.color_bg_dead,
             },
         };
 
-        self.cells[(self.size.width() * p.y + p.x) as usize] = cell;
+        self.cells[i] = cell;
     }
 
     fn setup_acorn(&mut self) {
@@ -92,17 +93,24 @@ impl World {
 
         let center = Point::new(self.size.width() / 2, self.size.height() / 2);
 
-        self.set_alive(Point::new(center.x - 2, center.y - 1));
-        self.set_alive(Point::new(center.x + 0, center.y + 0));
-        self.set_alive(Point::new(center.x - 3, center.y + 1));
-        self.set_alive(Point::new(center.x - 2, center.y + 1));
-        self.set_alive(Point::new(center.x + 1, center.y + 1));
-        self.set_alive(Point::new(center.x + 2, center.y + 1));
-        self.set_alive(Point::new(center.x + 3, center.y + 1));
+        self.set_alive_p(Point::new(center.x - 2, center.y - 1));
+        self.set_alive_p(Point::new(center.x + 0, center.y + 0));
+        self.set_alive_p(Point::new(center.x - 3, center.y + 1));
+        self.set_alive_p(Point::new(center.x - 2, center.y + 1));
+        self.set_alive_p(Point::new(center.x + 1, center.y + 1));
+        self.set_alive_p(Point::new(center.x + 2, center.y + 1));
+        self.set_alive_p(Point::new(center.x + 3, center.y + 1));
     }
 
     fn setup_blank(&mut self) {
-        self.cells = vec![Cell::default(); (self.size.width() * self.size.height()) as usize];
+        let dead_cell = Cell {
+            alive: false,
+            color: Color {
+                fg: Rgb::default(),
+                bg: self.color_bg_dead,
+            },
+        };
+        self.cells = vec![dead_cell; (self.size.width() * self.size.height()) as usize];
     }
 
     fn setup_r_pentonimo(&mut self) {
@@ -110,11 +118,11 @@ impl World {
 
         let center = Point::new(self.size.width() / 2, self.size.height() / 2);
 
-        self.set_alive(Point::new(center.x - 1, center.y - 1));
-        self.set_alive(Point::new(center.x + 0, center.y - 1));
-        self.set_alive(Point::new(center.x + 0, center.y + 0));
-        self.set_alive(Point::new(center.x + 1, center.y + 0));
-        self.set_alive(Point::new(center.x + 0, center.y + 1));
+        self.set_alive_p(Point::new(center.x - 1, center.y - 1));
+        self.set_alive_p(Point::new(center.x + 0, center.y - 1));
+        self.set_alive_p(Point::new(center.x + 0, center.y + 0));
+        self.set_alive_p(Point::new(center.x + 1, center.y + 0));
+        self.set_alive_p(Point::new(center.x + 0, center.y + 1));
     }
 
     fn setup_termgol(&mut self) {
@@ -122,94 +130,94 @@ impl World {
 
         let center = Point::new(self.size.width() / 2, self.size.height() / 2);
 
-        self.set_alive(Point::new(center.x - 20, center.y - 2));
-        self.set_alive(Point::new(center.x - 19, center.y - 2));
-        self.set_alive(Point::new(center.x - 18, center.y - 2));
-        self.set_alive(Point::new(center.x - 17, center.y - 2));
-        self.set_alive(Point::new(center.x - 16, center.y - 2));
-        self.set_alive(Point::new(center.x - 18, center.y - 1));
-        self.set_alive(Point::new(center.x - 18, center.y - 0));
-        self.set_alive(Point::new(center.x - 18, center.y + 1));
-        self.set_alive(Point::new(center.x - 18, center.y + 2));
-        self.set_alive(Point::new(center.x - 14, center.y - 2));
-        self.set_alive(Point::new(center.x - 13, center.y - 2));
-        self.set_alive(Point::new(center.x - 12, center.y - 2));
-        self.set_alive(Point::new(center.x - 11, center.y - 2));
-        self.set_alive(Point::new(center.x - 10, center.y - 2));
-        self.set_alive(Point::new(center.x - 14, center.y - 1));
-        self.set_alive(Point::new(center.x - 14, center.y - 0));
-        self.set_alive(Point::new(center.x - 13, center.y - 0));
-        self.set_alive(Point::new(center.x - 12, center.y - 0));
-        self.set_alive(Point::new(center.x - 11, center.y - 0));
-        self.set_alive(Point::new(center.x - 10, center.y - 0));
-        self.set_alive(Point::new(center.x - 14, center.y + 1));
-        self.set_alive(Point::new(center.x - 14, center.y + 2));
-        self.set_alive(Point::new(center.x - 13, center.y + 2));
-        self.set_alive(Point::new(center.x - 12, center.y + 2));
-        self.set_alive(Point::new(center.x - 11, center.y + 2));
-        self.set_alive(Point::new(center.x - 10, center.y + 2));
-        self.set_alive(Point::new(center.x - 8, center.y - 2));
-        self.set_alive(Point::new(center.x - 7, center.y - 2));
-        self.set_alive(Point::new(center.x - 6, center.y - 2));
-        self.set_alive(Point::new(center.x - 5, center.y - 2));
-        self.set_alive(Point::new(center.x - 8, center.y - 1));
-        self.set_alive(Point::new(center.x - 4, center.y - 1));
-        self.set_alive(Point::new(center.x - 8, center.y - 0));
-        self.set_alive(Point::new(center.x - 7, center.y - 0));
-        self.set_alive(Point::new(center.x - 6, center.y - 0));
-        self.set_alive(Point::new(center.x - 5, center.y - 0));
-        self.set_alive(Point::new(center.x - 8, center.y + 1));
-        self.set_alive(Point::new(center.x - 6, center.y + 1));
-        self.set_alive(Point::new(center.x - 8, center.y + 2));
-        self.set_alive(Point::new(center.x - 5, center.y + 2));
-        self.set_alive(Point::new(center.x - 2, center.y - 2));
-        self.set_alive(Point::new(center.x + 2, center.y - 2));
-        self.set_alive(Point::new(center.x - 2, center.y - 1));
-        self.set_alive(Point::new(center.x - 1, center.y - 1));
-        self.set_alive(Point::new(center.x + 1, center.y - 1));
-        self.set_alive(Point::new(center.x + 2, center.y - 1));
-        self.set_alive(Point::new(center.x - 2, center.y - 0));
-        self.set_alive(Point::new(center.x + 0, center.y - 0));
-        self.set_alive(Point::new(center.x + 2, center.y - 0));
-        self.set_alive(Point::new(center.x - 2, center.y + 1));
-        self.set_alive(Point::new(center.x + 2, center.y + 1));
-        self.set_alive(Point::new(center.x - 2, center.y + 2));
-        self.set_alive(Point::new(center.x + 2, center.y + 2));
-        self.set_alive(Point::new(center.x + 5, center.y - 2));
-        self.set_alive(Point::new(center.x + 6, center.y - 2));
-        self.set_alive(Point::new(center.x + 7, center.y - 2));
-        self.set_alive(Point::new(center.x + 8, center.y - 2));
-        self.set_alive(Point::new(center.x + 4, center.y - 1));
-        self.set_alive(Point::new(center.x + 4, center.y - 0));
-        self.set_alive(Point::new(center.x + 7, center.y - 0));
-        self.set_alive(Point::new(center.x + 8, center.y - 0));
-        self.set_alive(Point::new(center.x + 4, center.y + 1));
-        self.set_alive(Point::new(center.x + 8, center.y + 1));
-        self.set_alive(Point::new(center.x + 5, center.y + 2));
-        self.set_alive(Point::new(center.x + 6, center.y + 2));
-        self.set_alive(Point::new(center.x + 7, center.y + 2));
-        self.set_alive(Point::new(center.x + 8, center.y + 2));
-        self.set_alive(Point::new(center.x + 11, center.y - 2));
-        self.set_alive(Point::new(center.x + 12, center.y - 2));
-        self.set_alive(Point::new(center.x + 13, center.y - 2));
-        self.set_alive(Point::new(center.x + 10, center.y - 1));
-        self.set_alive(Point::new(center.x + 14, center.y - 1));
-        self.set_alive(Point::new(center.x + 10, center.y - 0));
-        self.set_alive(Point::new(center.x + 14, center.y - 0));
-        self.set_alive(Point::new(center.x + 10, center.y + 1));
-        self.set_alive(Point::new(center.x + 14, center.y + 1));
-        self.set_alive(Point::new(center.x + 11, center.y + 2));
-        self.set_alive(Point::new(center.x + 12, center.y + 2));
-        self.set_alive(Point::new(center.x + 13, center.y + 2));
-        self.set_alive(Point::new(center.x + 16, center.y - 2));
-        self.set_alive(Point::new(center.x + 16, center.y - 1));
-        self.set_alive(Point::new(center.x + 16, center.y - 0));
-        self.set_alive(Point::new(center.x + 16, center.y + 1));
-        self.set_alive(Point::new(center.x + 16, center.y + 2));
-        self.set_alive(Point::new(center.x + 17, center.y + 2));
-        self.set_alive(Point::new(center.x + 18, center.y + 2));
-        self.set_alive(Point::new(center.x + 19, center.y + 2));
-        self.set_alive(Point::new(center.x + 20, center.y + 2));
+        self.set_alive_p(Point::new(center.x - 20, center.y - 2));
+        self.set_alive_p(Point::new(center.x - 19, center.y - 2));
+        self.set_alive_p(Point::new(center.x - 18, center.y - 2));
+        self.set_alive_p(Point::new(center.x - 17, center.y - 2));
+        self.set_alive_p(Point::new(center.x - 16, center.y - 2));
+        self.set_alive_p(Point::new(center.x - 18, center.y - 1));
+        self.set_alive_p(Point::new(center.x - 18, center.y - 0));
+        self.set_alive_p(Point::new(center.x - 18, center.y + 1));
+        self.set_alive_p(Point::new(center.x - 18, center.y + 2));
+        self.set_alive_p(Point::new(center.x - 14, center.y - 2));
+        self.set_alive_p(Point::new(center.x - 13, center.y - 2));
+        self.set_alive_p(Point::new(center.x - 12, center.y - 2));
+        self.set_alive_p(Point::new(center.x - 11, center.y - 2));
+        self.set_alive_p(Point::new(center.x - 10, center.y - 2));
+        self.set_alive_p(Point::new(center.x - 14, center.y - 1));
+        self.set_alive_p(Point::new(center.x - 14, center.y - 0));
+        self.set_alive_p(Point::new(center.x - 13, center.y - 0));
+        self.set_alive_p(Point::new(center.x - 12, center.y - 0));
+        self.set_alive_p(Point::new(center.x - 11, center.y - 0));
+        self.set_alive_p(Point::new(center.x - 10, center.y - 0));
+        self.set_alive_p(Point::new(center.x - 14, center.y + 1));
+        self.set_alive_p(Point::new(center.x - 14, center.y + 2));
+        self.set_alive_p(Point::new(center.x - 13, center.y + 2));
+        self.set_alive_p(Point::new(center.x - 12, center.y + 2));
+        self.set_alive_p(Point::new(center.x - 11, center.y + 2));
+        self.set_alive_p(Point::new(center.x - 10, center.y + 2));
+        self.set_alive_p(Point::new(center.x - 8, center.y - 2));
+        self.set_alive_p(Point::new(center.x - 7, center.y - 2));
+        self.set_alive_p(Point::new(center.x - 6, center.y - 2));
+        self.set_alive_p(Point::new(center.x - 5, center.y - 2));
+        self.set_alive_p(Point::new(center.x - 8, center.y - 1));
+        self.set_alive_p(Point::new(center.x - 4, center.y - 1));
+        self.set_alive_p(Point::new(center.x - 8, center.y - 0));
+        self.set_alive_p(Point::new(center.x - 7, center.y - 0));
+        self.set_alive_p(Point::new(center.x - 6, center.y - 0));
+        self.set_alive_p(Point::new(center.x - 5, center.y - 0));
+        self.set_alive_p(Point::new(center.x - 8, center.y + 1));
+        self.set_alive_p(Point::new(center.x - 6, center.y + 1));
+        self.set_alive_p(Point::new(center.x - 8, center.y + 2));
+        self.set_alive_p(Point::new(center.x - 5, center.y + 2));
+        self.set_alive_p(Point::new(center.x - 2, center.y - 2));
+        self.set_alive_p(Point::new(center.x + 2, center.y - 2));
+        self.set_alive_p(Point::new(center.x - 2, center.y - 1));
+        self.set_alive_p(Point::new(center.x - 1, center.y - 1));
+        self.set_alive_p(Point::new(center.x + 1, center.y - 1));
+        self.set_alive_p(Point::new(center.x + 2, center.y - 1));
+        self.set_alive_p(Point::new(center.x - 2, center.y - 0));
+        self.set_alive_p(Point::new(center.x + 0, center.y - 0));
+        self.set_alive_p(Point::new(center.x + 2, center.y - 0));
+        self.set_alive_p(Point::new(center.x - 2, center.y + 1));
+        self.set_alive_p(Point::new(center.x + 2, center.y + 1));
+        self.set_alive_p(Point::new(center.x - 2, center.y + 2));
+        self.set_alive_p(Point::new(center.x + 2, center.y + 2));
+        self.set_alive_p(Point::new(center.x + 5, center.y - 2));
+        self.set_alive_p(Point::new(center.x + 6, center.y - 2));
+        self.set_alive_p(Point::new(center.x + 7, center.y - 2));
+        self.set_alive_p(Point::new(center.x + 8, center.y - 2));
+        self.set_alive_p(Point::new(center.x + 4, center.y - 1));
+        self.set_alive_p(Point::new(center.x + 4, center.y - 0));
+        self.set_alive_p(Point::new(center.x + 7, center.y - 0));
+        self.set_alive_p(Point::new(center.x + 8, center.y - 0));
+        self.set_alive_p(Point::new(center.x + 4, center.y + 1));
+        self.set_alive_p(Point::new(center.x + 8, center.y + 1));
+        self.set_alive_p(Point::new(center.x + 5, center.y + 2));
+        self.set_alive_p(Point::new(center.x + 6, center.y + 2));
+        self.set_alive_p(Point::new(center.x + 7, center.y + 2));
+        self.set_alive_p(Point::new(center.x + 8, center.y + 2));
+        self.set_alive_p(Point::new(center.x + 11, center.y - 2));
+        self.set_alive_p(Point::new(center.x + 12, center.y - 2));
+        self.set_alive_p(Point::new(center.x + 13, center.y - 2));
+        self.set_alive_p(Point::new(center.x + 10, center.y - 1));
+        self.set_alive_p(Point::new(center.x + 14, center.y - 1));
+        self.set_alive_p(Point::new(center.x + 10, center.y - 0));
+        self.set_alive_p(Point::new(center.x + 14, center.y - 0));
+        self.set_alive_p(Point::new(center.x + 10, center.y + 1));
+        self.set_alive_p(Point::new(center.x + 14, center.y + 1));
+        self.set_alive_p(Point::new(center.x + 11, center.y + 2));
+        self.set_alive_p(Point::new(center.x + 12, center.y + 2));
+        self.set_alive_p(Point::new(center.x + 13, center.y + 2));
+        self.set_alive_p(Point::new(center.x + 16, center.y - 2));
+        self.set_alive_p(Point::new(center.x + 16, center.y - 1));
+        self.set_alive_p(Point::new(center.x + 16, center.y - 0));
+        self.set_alive_p(Point::new(center.x + 16, center.y + 1));
+        self.set_alive_p(Point::new(center.x + 16, center.y + 2));
+        self.set_alive_p(Point::new(center.x + 17, center.y + 2));
+        self.set_alive_p(Point::new(center.x + 18, center.y + 2));
+        self.set_alive_p(Point::new(center.x + 19, center.y + 2));
+        self.set_alive_p(Point::new(center.x + 20, center.y + 2));
     }
 
     pub fn update(&mut self) {
@@ -247,7 +255,11 @@ impl World {
         }
 
         for i in 0..self.cells.len() {
-            self.cells[i].alive = is_alive[i];
+            if is_alive[i] {
+                self.set_alive(i);
+            } else {
+                self.set_dead(i);
+            }
         }
     }
 

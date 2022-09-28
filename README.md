@@ -17,6 +17,7 @@
 - screensaver mode
 - toroidal or sheet world
 - cell setups from files
+- rainbow colors
 
 ## Nice Settings
 

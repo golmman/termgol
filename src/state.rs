@@ -58,7 +58,7 @@ impl State {
         }
 
         let i = (self.world.size.width() * self.cursor_pos.y + self.cursor_pos.x) as usize;
-        self.world.cells[i] = 1 - self.world.cells[i];
+        self.world.cells[i].alive = !self.world.cells[i].alive;
     }
 
     pub fn debug_info_next_page(&mut self) {

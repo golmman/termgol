@@ -1,14 +1,34 @@
-use crate::common::{args::Args, cell_setup::CellSetup, color::Color, point::Point};
+use crate::common::{
+    args::Args,
+    cell_setup::CellSetup,
+    color::{Color, Rgb},
+    point::Point,
+};
 
+#[derive(Clone)]
 pub struct Cell {
     pub alive: bool,
     pub color: Color,
 }
 
+impl Default for Cell {
+    fn default() -> Self {
+        Self {
+            alive: false,
+            color: Color {
+                bg: Rgb { r: 0, g: 0, b: 0 },
+                fg: Rgb { r: 0, g: 0, b: 0 },
+            },
+        }
+    }
+}
+
 pub struct World {
-    pub cell_setup: CellSetup,
     pub birth_rule: Vec<u32>,
-    pub cells: Vec<u32>,
+    pub cell_setup: CellSetup,
+    pub cells: Vec<Cell>,
+    pub color_bg_alive: Rgb,
+    pub color_bg_dead: Rgb,
     pub size: Point,
     pub survival_rule: Vec<u32>,
 }
@@ -16,9 +36,11 @@ pub struct World {
 impl From<Args> for World {
     fn from(args: Args) -> Self {
         Self {
-            cell_setup: args.cell_setup,
             birth_rule: args.rules.birth.clone(),
+            cell_setup: args.cell_setup,
             cells: Vec::new(),
+            color_bg_alive: args.color_bg_alive,
+            color_bg_dead: args.color_bg_dead,
             size: Point::new(0, 0),
             survival_rule: args.rules.survival.clone(),
         }
@@ -41,33 +63,58 @@ impl World {
         }
     }
 
+    fn set_alive(&mut self, p: Point) {
+        let cell = Cell {
+            alive: true,
+            color: Color {
+                fg: Rgb { r: 0, g: 0, b: 0 },
+                bg: self.color_bg_alive,
+            },
+        };
+
+        self.cells[(self.size.width() * p.y + p.x) as usize] = cell;
+    }
+
+    fn set_dead(&self, p: Point) {
+        let cell = Cell {
+            alive: false,
+            color: Color {
+                fg: Rgb { r: 0, g: 0, b: 0 },
+                bg: self.color_bg_dead,
+            },
+        };
+
+        self.cells[(self.size.width() * p.y + p.x) as usize] = cell;
+    }
+
     fn setup_acorn(&mut self) {
         self.setup_blank();
 
         let center = Point::new(self.size.width() / 2, self.size.height() / 2);
 
-        self.cells[(self.size.width() * (center.y - 1) + (center.x - 2)) as usize] = 1;
-        self.cells[(self.size.width() * center.y + center.x) as usize] = 1;
-        self.cells[(self.size.width() * (center.y + 1) + (center.x - 3)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y + 1) + (center.x - 2)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y + 1) + (center.x + 1)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y + 1) + (center.x + 2)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y + 1) + (center.x + 3)) as usize] = 1;
+        self.set_alive(Point::new(center.x - 2, center.y - 1));
+        self.set_alive(Point::new(center.x + 0, center.y + 0));
+        self.set_alive(Point::new(center.x - 3, center.y + 1));
+        self.set_alive(Point::new(center.x - 2, center.y + 1));
+        self.set_alive(Point::new(center.x + 1, center.y + 1));
+        self.set_alive(Point::new(center.x + 2, center.y + 1));
+        self.set_alive(Point::new(center.x + 3, center.y + 1));
     }
 
     fn setup_blank(&mut self) {
-        self.cells = vec![0; (self.size.width() * self.size.height()) as usize];
+        self.cells = vec![Cell::default(); (self.size.width() * self.size.height()) as usize];
     }
 
     fn setup_r_pentonimo(&mut self) {
         self.setup_blank();
 
         let center = Point::new(self.size.width() / 2, self.size.height() / 2);
-        self.cells[(self.size.width() * (center.y - 1) + (center.x - 1)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y - 1) + center.x) as usize] = 1;
-        self.cells[(self.size.width() * center.y + center.x) as usize] = 1;
-        self.cells[(self.size.width() * center.y + (center.x + 1)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y + 1) + center.x) as usize] = 1;
+
+        self.set_alive(Point::new(center.x - 1, center.y - 1));
+        self.set_alive(Point::new(center.x + 0, center.y - 1));
+        self.set_alive(Point::new(center.x + 0, center.y + 0));
+        self.set_alive(Point::new(center.x + 1, center.y + 0));
+        self.set_alive(Point::new(center.x + 0, center.y + 1));
     }
 
     fn setup_termgol(&mut self) {
@@ -75,145 +122,133 @@ impl World {
 
         let center = Point::new(self.size.width() / 2, self.size.height() / 2);
 
-        // T
-        self.cells[(self.size.width() * (center.y - 2) + (center.x - 20)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y - 2) + (center.x - 19)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y - 2) + (center.x - 18)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y - 2) + (center.x - 17)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y - 2) + (center.x - 16)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y - 1) + (center.x - 18)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y - 0) + (center.x - 18)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y + 1) + (center.x - 18)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y + 2) + (center.x - 18)) as usize] = 1;
-
-        // E
-        self.cells[(self.size.width() * (center.y - 2) + (center.x - 14)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y - 2) + (center.x - 13)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y - 2) + (center.x - 12)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y - 2) + (center.x - 11)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y - 2) + (center.x - 10)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y - 1) + (center.x - 14)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y - 0) + (center.x - 14)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y - 0) + (center.x - 13)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y - 0) + (center.x - 12)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y - 0) + (center.x - 11)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y - 0) + (center.x - 10)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y + 1) + (center.x - 14)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y + 2) + (center.x - 14)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y + 2) + (center.x - 13)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y + 2) + (center.x - 12)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y + 2) + (center.x - 11)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y + 2) + (center.x - 10)) as usize] = 1;
-
-        // R
-        self.cells[(self.size.width() * (center.y - 2) + (center.x - 8)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y - 2) + (center.x - 7)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y - 2) + (center.x - 6)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y - 2) + (center.x - 5)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y - 1) + (center.x - 8)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y - 1) + (center.x - 4)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y - 0) + (center.x - 8)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y - 0) + (center.x - 7)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y - 0) + (center.x - 6)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y - 0) + (center.x - 5)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y + 1) + (center.x - 8)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y + 1) + (center.x - 6)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y + 2) + (center.x - 8)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y + 2) + (center.x - 5)) as usize] = 1;
-
-        // M
-        self.cells[(self.size.width() * (center.y - 2) + (center.x - 2)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y - 2) + (center.x + 2)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y - 1) + (center.x - 2)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y - 1) + (center.x - 1)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y - 1) + (center.x + 1)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y - 1) + (center.x + 2)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y - 0) + (center.x - 2)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y - 0) + (center.x + 0)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y - 0) + (center.x + 2)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y + 1) + (center.x - 2)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y + 1) + (center.x + 2)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y + 2) + (center.x - 2)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y + 2) + (center.x + 2)) as usize] = 1;
-
-        // G
-        self.cells[(self.size.width() * (center.y - 2) + (center.x + 5)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y - 2) + (center.x + 6)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y - 2) + (center.x + 7)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y - 2) + (center.x + 8)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y - 1) + (center.x + 4)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y - 0) + (center.x + 4)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y - 0) + (center.x + 7)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y - 0) + (center.x + 8)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y + 1) + (center.x + 4)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y + 1) + (center.x + 8)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y + 2) + (center.x + 5)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y + 2) + (center.x + 6)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y + 2) + (center.x + 7)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y + 2) + (center.x + 8)) as usize] = 1;
-
-        // O
-        self.cells[(self.size.width() * (center.y - 2) + (center.x + 11)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y - 2) + (center.x + 12)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y - 2) + (center.x + 13)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y - 1) + (center.x + 10)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y - 1) + (center.x + 14)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y - 0) + (center.x + 10)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y - 0) + (center.x + 14)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y + 1) + (center.x + 10)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y + 1) + (center.x + 14)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y + 2) + (center.x + 11)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y + 2) + (center.x + 12)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y + 2) + (center.x + 13)) as usize] = 1;
-
-        // L
-        self.cells[(self.size.width() * (center.y - 2) + (center.x + 16)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y - 1) + (center.x + 16)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y - 0) + (center.x + 16)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y + 1) + (center.x + 16)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y + 2) + (center.x + 16)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y + 2) + (center.x + 17)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y + 2) + (center.x + 18)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y + 2) + (center.x + 19)) as usize] = 1;
-        self.cells[(self.size.width() * (center.y + 2) + (center.x + 20)) as usize] = 1;
+        self.set_alive(Point::new(center.x - 20, center.y - 2));
+        self.set_alive(Point::new(center.x - 19, center.y - 2));
+        self.set_alive(Point::new(center.x - 18, center.y - 2));
+        self.set_alive(Point::new(center.x - 17, center.y - 2));
+        self.set_alive(Point::new(center.x - 16, center.y - 2));
+        self.set_alive(Point::new(center.x - 18, center.y - 1));
+        self.set_alive(Point::new(center.x - 18, center.y - 0));
+        self.set_alive(Point::new(center.x - 18, center.y + 1));
+        self.set_alive(Point::new(center.x - 18, center.y + 2));
+        self.set_alive(Point::new(center.x - 14, center.y - 2));
+        self.set_alive(Point::new(center.x - 13, center.y - 2));
+        self.set_alive(Point::new(center.x - 12, center.y - 2));
+        self.set_alive(Point::new(center.x - 11, center.y - 2));
+        self.set_alive(Point::new(center.x - 10, center.y - 2));
+        self.set_alive(Point::new(center.x - 14, center.y - 1));
+        self.set_alive(Point::new(center.x - 14, center.y - 0));
+        self.set_alive(Point::new(center.x - 13, center.y - 0));
+        self.set_alive(Point::new(center.x - 12, center.y - 0));
+        self.set_alive(Point::new(center.x - 11, center.y - 0));
+        self.set_alive(Point::new(center.x - 10, center.y - 0));
+        self.set_alive(Point::new(center.x - 14, center.y + 1));
+        self.set_alive(Point::new(center.x - 14, center.y + 2));
+        self.set_alive(Point::new(center.x - 13, center.y + 2));
+        self.set_alive(Point::new(center.x - 12, center.y + 2));
+        self.set_alive(Point::new(center.x - 11, center.y + 2));
+        self.set_alive(Point::new(center.x - 10, center.y + 2));
+        self.set_alive(Point::new(center.x - 8, center.y - 2));
+        self.set_alive(Point::new(center.x - 7, center.y - 2));
+        self.set_alive(Point::new(center.x - 6, center.y - 2));
+        self.set_alive(Point::new(center.x - 5, center.y - 2));
+        self.set_alive(Point::new(center.x - 8, center.y - 1));
+        self.set_alive(Point::new(center.x - 4, center.y - 1));
+        self.set_alive(Point::new(center.x - 8, center.y - 0));
+        self.set_alive(Point::new(center.x - 7, center.y - 0));
+        self.set_alive(Point::new(center.x - 6, center.y - 0));
+        self.set_alive(Point::new(center.x - 5, center.y - 0));
+        self.set_alive(Point::new(center.x - 8, center.y + 1));
+        self.set_alive(Point::new(center.x - 6, center.y + 1));
+        self.set_alive(Point::new(center.x - 8, center.y + 2));
+        self.set_alive(Point::new(center.x - 5, center.y + 2));
+        self.set_alive(Point::new(center.x - 2, center.y - 2));
+        self.set_alive(Point::new(center.x + 2, center.y - 2));
+        self.set_alive(Point::new(center.x - 2, center.y - 1));
+        self.set_alive(Point::new(center.x - 1, center.y - 1));
+        self.set_alive(Point::new(center.x + 1, center.y - 1));
+        self.set_alive(Point::new(center.x + 2, center.y - 1));
+        self.set_alive(Point::new(center.x - 2, center.y - 0));
+        self.set_alive(Point::new(center.x + 0, center.y - 0));
+        self.set_alive(Point::new(center.x + 2, center.y - 0));
+        self.set_alive(Point::new(center.x - 2, center.y + 1));
+        self.set_alive(Point::new(center.x + 2, center.y + 1));
+        self.set_alive(Point::new(center.x - 2, center.y + 2));
+        self.set_alive(Point::new(center.x + 2, center.y + 2));
+        self.set_alive(Point::new(center.x + 5, center.y - 2));
+        self.set_alive(Point::new(center.x + 6, center.y - 2));
+        self.set_alive(Point::new(center.x + 7, center.y - 2));
+        self.set_alive(Point::new(center.x + 8, center.y - 2));
+        self.set_alive(Point::new(center.x + 4, center.y - 1));
+        self.set_alive(Point::new(center.x + 4, center.y - 0));
+        self.set_alive(Point::new(center.x + 7, center.y - 0));
+        self.set_alive(Point::new(center.x + 8, center.y - 0));
+        self.set_alive(Point::new(center.x + 4, center.y + 1));
+        self.set_alive(Point::new(center.x + 8, center.y + 1));
+        self.set_alive(Point::new(center.x + 5, center.y + 2));
+        self.set_alive(Point::new(center.x + 6, center.y + 2));
+        self.set_alive(Point::new(center.x + 7, center.y + 2));
+        self.set_alive(Point::new(center.x + 8, center.y + 2));
+        self.set_alive(Point::new(center.x + 11, center.y - 2));
+        self.set_alive(Point::new(center.x + 12, center.y - 2));
+        self.set_alive(Point::new(center.x + 13, center.y - 2));
+        self.set_alive(Point::new(center.x + 10, center.y - 1));
+        self.set_alive(Point::new(center.x + 14, center.y - 1));
+        self.set_alive(Point::new(center.x + 10, center.y - 0));
+        self.set_alive(Point::new(center.x + 14, center.y - 0));
+        self.set_alive(Point::new(center.x + 10, center.y + 1));
+        self.set_alive(Point::new(center.x + 14, center.y + 1));
+        self.set_alive(Point::new(center.x + 11, center.y + 2));
+        self.set_alive(Point::new(center.x + 12, center.y + 2));
+        self.set_alive(Point::new(center.x + 13, center.y + 2));
+        self.set_alive(Point::new(center.x + 16, center.y - 2));
+        self.set_alive(Point::new(center.x + 16, center.y - 1));
+        self.set_alive(Point::new(center.x + 16, center.y - 0));
+        self.set_alive(Point::new(center.x + 16, center.y + 1));
+        self.set_alive(Point::new(center.x + 16, center.y + 2));
+        self.set_alive(Point::new(center.x + 17, center.y + 2));
+        self.set_alive(Point::new(center.x + 18, center.y + 2));
+        self.set_alive(Point::new(center.x + 19, center.y + 2));
+        self.set_alive(Point::new(center.x + 20, center.y + 2));
     }
 
     pub fn update(&mut self) {
-        let mut new_cells = vec![0; (self.size.width() * self.size.height()) as usize];
+        let mut is_alive = vec![false; (self.size.width() * self.size.height()) as usize];
 
         for y in 0..self.size.height() {
             for x in 0..self.size.width() {
                 let i = (self.size.width() * y + x) as usize;
-                let cell = self.cells[i];
                 let neighbour_cell_count = self.count_neighbor_cells(&Point::new(x, y));
 
-                if cell == 0 {
-                    if self
-                        .birth_rule
-                        .iter()
-                        .find(|&&count| count == neighbour_cell_count)
-                        .is_some()
-                    {
-                        new_cells[i] = 1;
-                    } else {
-                        new_cells[i] = 0;
-                    }
-                } else {
+                if self.cells[i].alive {
                     if self
                         .survival_rule
                         .iter()
                         .find(|&&count| count == neighbour_cell_count)
                         .is_some()
                     {
-                        new_cells[i] = 1;
+                        is_alive[i] = true;
                     } else {
-                        new_cells[i] = 0;
+                        is_alive[i] = false;
+                    }
+                } else {
+                    if self
+                        .birth_rule
+                        .iter()
+                        .find(|&&count| count == neighbour_cell_count)
+                        .is_some()
+                    {
+                        is_alive[i] = true;
+                    } else {
+                        is_alive[i] = false;
                     }
                 }
             }
         }
 
-        self.cells = new_cells;
+        for i in 0..self.cells.len() {
+            self.cells[i].alive = is_alive[i];
+        }
     }
 
     fn count_neighbor_cells(&self, p: &Point) -> u32 {
@@ -221,7 +256,7 @@ impl World {
         let neighbour_indices = self.get_neighbour_indices(p);
 
         for index in neighbour_indices {
-            if self.cells[index] != 0 {
+            if self.cells[index].alive {
                 count += 1;
             }
         }

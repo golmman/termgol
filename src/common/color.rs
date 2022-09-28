@@ -18,14 +18,18 @@ pub struct Rgb {
 
 impl Rgb {
     pub fn parse(hex_code: &str) -> Result<Rgb, Error> {
-        let error_map = |_: ParseIntError| {
+        let error_map = || {
             Command::new("set argument to e.g. '#ff0000' for a bright red color")
                 .error(ErrorKind::InvalidValue, "invalid rgb hex code")
         };
 
-        let r: u8 = u8::from_str_radix(&hex_code[1..3], 16).map_err(error_map)?;
-        let g: u8 = u8::from_str_radix(&hex_code[3..5], 16).map_err(error_map)?;
-        let b: u8 = u8::from_str_radix(&hex_code[5..7], 16).map_err(error_map)?;
+        if hex_code.len() != 7 {
+            return Err(error_map());
+        }
+
+        let r: u8 = u8::from_str_radix(&hex_code[1..3], 16).map_err(|_| error_map())?;
+        let g: u8 = u8::from_str_radix(&hex_code[3..5], 16).map_err(|_| error_map())?;
+        let b: u8 = u8::from_str_radix(&hex_code[5..7], 16).map_err(|_| error_map())?;
 
         Ok(Rgb { r, g, b })
     }

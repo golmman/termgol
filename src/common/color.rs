@@ -33,9 +33,9 @@ impl Rgb {
             return Err(error_map());
         }
 
-        let r: u8 = u8::from_str_radix(&hex_code[1..3], 16).map_err(|_| error_map())?;
-        let g: u8 = u8::from_str_radix(&hex_code[3..5], 16).map_err(|_| error_map())?;
-        let b: u8 = u8::from_str_radix(&hex_code[5..7], 16).map_err(|_| error_map())?;
+        let r = u8::from_str_radix(&hex_code[1..3], 16).map_err(|_| error_map())?;
+        let g = u8::from_str_radix(&hex_code[3..5], 16).map_err(|_| error_map())?;
+        let b = u8::from_str_radix(&hex_code[5..7], 16).map_err(|_| error_map())?;
 
         Ok(Rgb { r, g, b })
     }

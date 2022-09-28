@@ -8,10 +8,10 @@
 - frames per second
 - rules
 - 24 bit colors
+- customizable live and dead cell color
 
 ## Ideas
 
-- customizable live and dead cell color
 - customizable live and dead cell character
 - fading cells
 - screensaver mode

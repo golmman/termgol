@@ -12,6 +12,6 @@ mod state;
 fn main() {
     let args = Args::parse();
     let state = State::from(args);
-    let mut controller = Controller::from(state);
-    controller.run();
+
+    Controller::from(state).run();
 }

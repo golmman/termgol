@@ -7,20 +7,7 @@ use crate::common::{
     point::Point,
 };
 
-#[derive(Clone)]
-pub struct Cell {
-    pub alive: bool,
-    pub color: Color,
-}
-
-impl Default for Cell {
-    fn default() -> Self {
-        Self {
-            alive: false,
-            color: Color::default(),
-        }
-    }
-}
+use super::cell::Cell;
 
 pub struct World {
     pub birth_rule: Vec<u32>,

@@ -4,6 +4,7 @@ use crate::common::DEBUG_INFO_PAGE_TOTAL;
 
 use self::world::World;
 
+mod cell;
 mod world;
 
 pub struct State {

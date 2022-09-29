@@ -25,4 +25,5 @@
 cargo run --release -- -c acorn -r B2/S
 cargo run --release -- -c termgol -r B3/S012345678
 cargo run --release -- -c termgol -r B36/S125
+cargo run --release -- -F 1 -f 40 -r 'B357/S245' -c termgol
 ```

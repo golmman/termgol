@@ -25,7 +25,7 @@ pub struct Args {
     /// 255 => instant,
     /// 0 => cells appear as if they are not dying,
     /// negative values => funny colors
-    #[clap(long, value_parser, default_value_t = 140)]
+    #[clap(short = 'F', long, value_parser, default_value_t = 140)]
     pub fading_speed: i32,
 
     /// Set the frames per second

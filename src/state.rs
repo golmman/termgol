@@ -7,6 +7,10 @@ use self::world::World;
 mod cell;
 mod world;
 
+pub mod cell_image;
+pub mod cell_setup;
+pub mod rules;
+
 pub struct State {
     pub args: Args,
     pub cursor_pos: Point,

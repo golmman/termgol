@@ -20,6 +20,10 @@ impl Point {
         self.y
     }
 
+    pub fn half(&self) -> Self {
+        Self::new(self.x / 2, self.y / 2)
+    }
+
     pub fn left(&self) -> Self {
         Self::new(self.x - 1, self.y)
     }

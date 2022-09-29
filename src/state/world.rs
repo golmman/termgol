@@ -2,12 +2,11 @@ use std::cmp::{max, min};
 
 use crate::common::{
     args::Args,
-    cell_setup::CellSetup,
     color::{Color, Rgb},
     point::Point,
 };
 
-use super::cell::Cell;
+use super::{cell::Cell, cell_image::CellImage, cell_setup::CellSetup};
 
 pub struct World {
     pub birth_rule: Vec<u32>,
@@ -43,11 +42,13 @@ impl World {
     }
 
     pub fn setup_cells(&mut self) {
-        match self.cell_setup {
-            CellSetup::Acorn => self.setup_acorn(),
-            CellSetup::Blank => self.setup_blank(),
-            CellSetup::RPentonimo => self.setup_r_pentonimo(),
-            CellSetup::Termgol => self.setup_termgol(),
+        self.setup_blank();
+
+        let cell_image = CellImage::from(self.cell_setup);
+        let cell_image_pos = self.size.half() - cell_image.size.half();
+
+        for p in &cell_image.living_points {
+            self.set_alive_p(&cell_image_pos + p);
         }
     }
 
@@ -110,20 +111,6 @@ impl World {
         self.cells[i] = cell;
     }
 
-    fn setup_acorn(&mut self) {
-        self.setup_blank();
-
-        let center = Point::new(self.size.width() / 2, self.size.height() / 2);
-
-        self.set_alive_p(Point::new(center.x - 2, center.y - 1));
-        self.set_alive_p(Point::new(center.x + 0, center.y + 0));
-        self.set_alive_p(Point::new(center.x - 3, center.y + 1));
-        self.set_alive_p(Point::new(center.x - 2, center.y + 1));
-        self.set_alive_p(Point::new(center.x + 1, center.y + 1));
-        self.set_alive_p(Point::new(center.x + 2, center.y + 1));
-        self.set_alive_p(Point::new(center.x + 3, center.y + 1));
-    }
-
     fn setup_blank(&mut self) {
         let dead_cell = Cell {
             alive: false,
@@ -133,113 +120,6 @@ impl World {
             },
         };
         self.cells = vec![dead_cell; (self.size.width() * self.size.height()) as usize];
-    }
-
-    fn setup_r_pentonimo(&mut self) {
-        self.setup_blank();
-
-        let center = Point::new(self.size.width() / 2, self.size.height() / 2);
-
-        self.set_alive_p(Point::new(center.x - 1, center.y - 1));
-        self.set_alive_p(Point::new(center.x + 0, center.y - 1));
-        self.set_alive_p(Point::new(center.x + 0, center.y + 0));
-        self.set_alive_p(Point::new(center.x + 1, center.y + 0));
-        self.set_alive_p(Point::new(center.x + 0, center.y + 1));
-    }
-
-    fn setup_termgol(&mut self) {
-        self.setup_blank();
-
-        let center = Point::new(self.size.width() / 2, self.size.height() / 2);
-
-        self.set_alive_p(Point::new(center.x - 20, center.y - 2));
-        self.set_alive_p(Point::new(center.x - 19, center.y - 2));
-        self.set_alive_p(Point::new(center.x - 18, center.y - 2));
-        self.set_alive_p(Point::new(center.x - 17, center.y - 2));
-        self.set_alive_p(Point::new(center.x - 16, center.y - 2));
-        self.set_alive_p(Point::new(center.x - 18, center.y - 1));
-        self.set_alive_p(Point::new(center.x - 18, center.y - 0));
-        self.set_alive_p(Point::new(center.x - 18, center.y + 1));
-        self.set_alive_p(Point::new(center.x - 18, center.y + 2));
-        self.set_alive_p(Point::new(center.x - 14, center.y - 2));
-        self.set_alive_p(Point::new(center.x - 13, center.y - 2));
-        self.set_alive_p(Point::new(center.x - 12, center.y - 2));
-        self.set_alive_p(Point::new(center.x - 11, center.y - 2));
-        self.set_alive_p(Point::new(center.x - 10, center.y - 2));
-        self.set_alive_p(Point::new(center.x - 14, center.y - 1));
-        self.set_alive_p(Point::new(center.x - 14, center.y - 0));
-        self.set_alive_p(Point::new(center.x - 13, center.y - 0));
-        self.set_alive_p(Point::new(center.x - 12, center.y - 0));
-        self.set_alive_p(Point::new(center.x - 11, center.y - 0));
-        self.set_alive_p(Point::new(center.x - 10, center.y - 0));
-        self.set_alive_p(Point::new(center.x - 14, center.y + 1));
-        self.set_alive_p(Point::new(center.x - 14, center.y + 2));
-        self.set_alive_p(Point::new(center.x - 13, center.y + 2));
-        self.set_alive_p(Point::new(center.x - 12, center.y + 2));
-        self.set_alive_p(Point::new(center.x - 11, center.y + 2));
-        self.set_alive_p(Point::new(center.x - 10, center.y + 2));
-        self.set_alive_p(Point::new(center.x - 8, center.y - 2));
-        self.set_alive_p(Point::new(center.x - 7, center.y - 2));
-        self.set_alive_p(Point::new(center.x - 6, center.y - 2));
-        self.set_alive_p(Point::new(center.x - 5, center.y - 2));
-        self.set_alive_p(Point::new(center.x - 8, center.y - 1));
-        self.set_alive_p(Point::new(center.x - 4, center.y - 1));
-        self.set_alive_p(Point::new(center.x - 8, center.y - 0));
-        self.set_alive_p(Point::new(center.x - 7, center.y - 0));
-        self.set_alive_p(Point::new(center.x - 6, center.y - 0));
-        self.set_alive_p(Point::new(center.x - 5, center.y - 0));
-        self.set_alive_p(Point::new(center.x - 8, center.y + 1));
-        self.set_alive_p(Point::new(center.x - 6, center.y + 1));
-        self.set_alive_p(Point::new(center.x - 8, center.y + 2));
-        self.set_alive_p(Point::new(center.x - 5, center.y + 2));
-        self.set_alive_p(Point::new(center.x - 2, center.y - 2));
-        self.set_alive_p(Point::new(center.x + 2, center.y - 2));
-        self.set_alive_p(Point::new(center.x - 2, center.y - 1));
-        self.set_alive_p(Point::new(center.x - 1, center.y - 1));
-        self.set_alive_p(Point::new(center.x + 1, center.y - 1));
-        self.set_alive_p(Point::new(center.x + 2, center.y - 1));
-        self.set_alive_p(Point::new(center.x - 2, center.y - 0));
-        self.set_alive_p(Point::new(center.x + 0, center.y - 0));
-        self.set_alive_p(Point::new(center.x + 2, center.y - 0));
-        self.set_alive_p(Point::new(center.x - 2, center.y + 1));
-        self.set_alive_p(Point::new(center.x + 2, center.y + 1));
-        self.set_alive_p(Point::new(center.x - 2, center.y + 2));
-        self.set_alive_p(Point::new(center.x + 2, center.y + 2));
-        self.set_alive_p(Point::new(center.x + 5, center.y - 2));
-        self.set_alive_p(Point::new(center.x + 6, center.y - 2));
-        self.set_alive_p(Point::new(center.x + 7, center.y - 2));
-        self.set_alive_p(Point::new(center.x + 8, center.y - 2));
-        self.set_alive_p(Point::new(center.x + 4, center.y - 1));
-        self.set_alive_p(Point::new(center.x + 4, center.y - 0));
-        self.set_alive_p(Point::new(center.x + 7, center.y - 0));
-        self.set_alive_p(Point::new(center.x + 8, center.y - 0));
-        self.set_alive_p(Point::new(center.x + 4, center.y + 1));
-        self.set_alive_p(Point::new(center.x + 8, center.y + 1));
-        self.set_alive_p(Point::new(center.x + 5, center.y + 2));
-        self.set_alive_p(Point::new(center.x + 6, center.y + 2));
-        self.set_alive_p(Point::new(center.x + 7, center.y + 2));
-        self.set_alive_p(Point::new(center.x + 8, center.y + 2));
-        self.set_alive_p(Point::new(center.x + 11, center.y - 2));
-        self.set_alive_p(Point::new(center.x + 12, center.y - 2));
-        self.set_alive_p(Point::new(center.x + 13, center.y - 2));
-        self.set_alive_p(Point::new(center.x + 10, center.y - 1));
-        self.set_alive_p(Point::new(center.x + 14, center.y - 1));
-        self.set_alive_p(Point::new(center.x + 10, center.y - 0));
-        self.set_alive_p(Point::new(center.x + 14, center.y - 0));
-        self.set_alive_p(Point::new(center.x + 10, center.y + 1));
-        self.set_alive_p(Point::new(center.x + 14, center.y + 1));
-        self.set_alive_p(Point::new(center.x + 11, center.y + 2));
-        self.set_alive_p(Point::new(center.x + 12, center.y + 2));
-        self.set_alive_p(Point::new(center.x + 13, center.y + 2));
-        self.set_alive_p(Point::new(center.x + 16, center.y - 2));
-        self.set_alive_p(Point::new(center.x + 16, center.y - 1));
-        self.set_alive_p(Point::new(center.x + 16, center.y - 0));
-        self.set_alive_p(Point::new(center.x + 16, center.y + 1));
-        self.set_alive_p(Point::new(center.x + 16, center.y + 2));
-        self.set_alive_p(Point::new(center.x + 17, center.y + 2));
-        self.set_alive_p(Point::new(center.x + 18, center.y + 2));
-        self.set_alive_p(Point::new(center.x + 19, center.y + 2));
-        self.set_alive_p(Point::new(center.x + 20, center.y + 2));
     }
 
     pub fn update(&mut self) {

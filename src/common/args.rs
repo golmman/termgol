@@ -1,4 +1,7 @@
-use crate::common::{cell_setup::CellSetup, color::Rgb, rules::Rules};
+use crate::{
+    common::color::Rgb,
+    state::{cell_setup::CellSetup, rules::Rules},
+};
 use clap::Parser;
 
 #[derive(Clone, Debug, Parser)]

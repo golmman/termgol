@@ -44,7 +44,7 @@ impl World {
     pub fn setup_cells(&mut self) {
         self.setup_blank();
 
-        let cell_image = CellImage::from(self.cell_setup);
+        let cell_image = CellImage::from(self.cell_setup.clone());
         let cell_image_pos = self.size.half() - cell_image.size.half();
 
         for p in &cell_image.living_points {

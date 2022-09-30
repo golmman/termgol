@@ -38,7 +38,7 @@ impl From<&str> for CellImage {
 
 impl From<CellSetup> for CellImage {
     fn from(cell_setup: CellSetup) -> Self {
-        let s: &str = cell_setup.into();
-        CellImage::from(s)
+        let s: String = cell_setup.into();
+        CellImage::from(s.as_str())
     }
 }

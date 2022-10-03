@@ -20,6 +20,18 @@ impl Point {
         self.y
     }
 
+    pub fn is_bounded(&self, size: &Self) -> bool {
+        if self.x < 0 || self.y < 0 {
+            return false;
+        }
+
+        if self.x >= size.width() || self.y >= size.height() {
+            return false;
+        }
+
+        true
+    }
+
     pub fn half(&self) -> Self {
         Self::new(self.x / 2, self.y / 2)
     }

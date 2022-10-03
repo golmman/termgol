@@ -48,7 +48,10 @@ impl World {
         let cell_image_pos = self.size.half() - cell_image.size.half();
 
         for p in &cell_image.living_points {
-            self.set_alive_p(&cell_image_pos + p);
+            let point = &cell_image_pos + p;
+            if point.is_bounded(&self.size) {
+                self.set_alive_p(point);
+            }
         }
     }
 

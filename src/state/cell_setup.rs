@@ -3,25 +3,25 @@ use std::{fs::File, io::Read};
 use clap::Error;
 
 const ACORN: &str = r"
- #     
-   #   
-##  ###
+.O.....
+...O...
+OO..OOO
 ";
 
 const BLANK: &str = "";
 
 const R_PENTONIMO: &str = r"
-## 
- ##
- # 
+OO.
+.OO
+.O.
 ";
 
 const TERMGOL: &str = r"
-##### ##### ####  #   #  ####  ###  #    
-  #   #     #   # ## ## #     #   # #    
-  #   ####  ####  # # # #  ## #   # #    
-  #   #     #  #  #   # #   # #   # #    
-  #   ##### #   # #   #  ###   ###  #####
+OOOOO.OOOOO.OOOO..O...O..OOOO..OOO..O....
+..O...O.....O...O.OO.OO.O.....O...O.O....
+..O...OOOO..OOOO..O.O.O.O..OO.O...O.O....
+..O...O.....O..O..O...O.O...O.O...O.O....
+..O...OOOOO.O...O.O...O..OOO...OOO. OOOOO
 ";
 
 #[derive(Clone, Debug)]

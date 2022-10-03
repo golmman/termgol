@@ -1,5 +1,7 @@
 # termgol
 
+Visit [life wiki](https://conwaylife.com/) for cell setups
+
 ## Features
 
 - pause and drawing
@@ -10,13 +12,14 @@
 - 24 bit colors
 - customizable live and dead cell color
 - fading cells
+- cell setups from files
 
 ## Ideas
 
+- cell setups from stdin
 - customizable live and dead cell character
 - screensaver mode
 - toroidal or sheet world
-- cell setups from files
 - rainbow colors
 
 ## Nice Settings

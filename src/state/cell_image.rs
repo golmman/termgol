@@ -2,6 +2,8 @@ use crate::common::point::Point;
 
 use super::cell_setup::CellSetup;
 
+const DEAD_CELL_CHARS: &str = ". ";
+
 #[derive(Debug)]
 pub struct CellImage {
     pub living_points: Vec<Point>,
@@ -15,13 +17,17 @@ impl From<&str> for CellImage {
 
         let mut y = 0;
         for line in s.split("\n") {
+            if line.starts_with("!") {
+                continue;
+            }
+
             if width < line.len() as i32 {
                 width = line.len() as i32;
             }
 
             let mut x = 0;
             for c in line.chars() {
-                if c != ' ' {
+                if DEAD_CELL_CHARS.find(c).is_none() {
                     living_points.push(Point::new(x, y));
                 }
                 x += 1;

@@ -1,6 +1,8 @@
+use nanorand::{Rng, WyRand};
 use std::{fs::File, io::Read};
 
 use clap::Error;
+use regex::Regex;
 
 const ACORN: &str = r"
 .O.....
@@ -30,7 +32,7 @@ pub enum CellSetup {
     Blank,
     RPentonimo,
     Termgol,
-    FileContent(String),
+    Special(String),
 }
 
 impl From<CellSetup> for String {
@@ -40,7 +42,7 @@ impl From<CellSetup> for String {
             CellSetup::Blank => BLANK.to_string(),
             CellSetup::RPentonimo => R_PENTONIMO.to_string(),
             CellSetup::Termgol => TERMGOL.to_string(),
-            CellSetup::FileContent(s) => s,
+            CellSetup::Special(s) => s,
         }
     }
 }
@@ -52,15 +54,41 @@ impl CellSetup {
             "blank" => CellSetup::Blank,
             "r-pentonimo" => CellSetup::RPentonimo,
             "termgol" => CellSetup::Termgol,
-            _ => {
-                let mut file = File::open(s)?;
-                let mut file_content = String::new();
-                file.read_to_string(&mut file_content)?;
-
-                CellSetup::FileContent(file_content)
-            }
+            _ => CellSetup::parse_special(s)?,
         };
 
         Ok(cell_setup)
+    }
+
+    fn parse_special(s: &str) -> std::io::Result<CellSetup> {
+        let soup_regex = Regex::new(r"^soup(\d{1,3})$").unwrap();
+        let mut captures_iter = soup_regex.captures_iter(s);
+        if let Some(captures) = captures_iter.next() {
+            let soup_size: i32 = captures[1].parse().unwrap();
+            Ok(CellSetup::parse_soup(soup_size))
+        } else {
+            let mut file = File::open(s)?;
+            let mut file_content = String::new();
+            file.read_to_string(&mut file_content)?;
+            Ok(CellSetup::Special(file_content))
+        }
+    }
+
+    fn parse_soup(soup_size: i32) -> CellSetup {
+        let mut soup = String::new();
+
+        let mut rng = WyRand::new();
+        for _y in 0..soup_size {
+            for _x in 0..soup_size {
+                if rng.generate_range(0_u8..=1) == 0 {
+                    soup.push('.');
+                } else {
+                    soup.push('O');
+                }
+            }
+            soup.push('\n');
+        }
+
+        CellSetup::Special(soup)
     }
 }

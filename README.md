@@ -16,7 +16,7 @@ Visit [life wiki](https://conwaylife.com/) for cell setups
 
 ## Ideas
 
-- cell setups from stdin
+- ~~cell setups from stdin~~ (no raw mode after EOF `:(`)
 - customizable live and dead cell character
 - screensaver mode
 - toroidal or sheet world
@@ -29,11 +29,12 @@ cargo run --release -- -c acorn -r B2/S
 cargo run --release -- -c termgol -r B3/S012345678
 cargo run --release -- -c termgol -r B36/S125
 cargo run --release -- -F 1 -f 40 -r 'B357/S245' -c termgol
+cargo run --release -- -F 10 -c examples/konze.gol -r B345/S46
 ```
 
 ## Generate and load text files with figlet
 
 ```
-echo hello | figlet -f banner > examples/hello.gol
-cargo run --release -- -c examples/hello.gol
+echo hello | figlet -f banner > examples/hello.cells
+cargo run --release -- -c examples/hello.cells
 ```

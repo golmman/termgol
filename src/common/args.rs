@@ -9,10 +9,11 @@ use clap::Parser;
 pub struct Args {
     /// Load a world with a predefined cell setup.
     /// Recognized values:
-    ///   acorn
-    ///   blank
-    ///   r-pentonimo
-    ///   termgol
+    ///   acorn       - a classic long living minimal configuration
+    ///   blank       - an empty world
+    ///   r-pentonimo - a classic long living configuration with only 5 living cells
+    ///   soupX       - a random square "soup" of cells, where X is the length of an edge
+    ///   termgol     - TERMGOL letters
     /// When the input does not match against the values above it is
     /// interpreted as a file path.
     /// -

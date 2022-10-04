@@ -16,7 +16,13 @@ pub struct Args {
     /// When the input does not match against the values above it is
     /// interpreted as a file path.
     /// -
-    #[clap(short, long, value_parser = CellSetup::parse, default_value = "r-pentonimo", verbatim_doc_comment)]
+    #[clap(
+        short,
+        long,
+        value_parser = CellSetup::parse,
+        default_value = "r-pentonimo",
+        verbatim_doc_comment
+    )]
     pub cell_setup: CellSetup,
 
     /// Set the initial background color for living cells
@@ -50,14 +56,20 @@ pub struct Args {
     #[clap(short, long, value_parser, default_value_t = 10)]
     pub frames_per_second: u16,
 
+    /// Start paused so that you can edit the world
+    #[clap(short, long, value_parser, default_value_t = false)]
+    pub paused: bool,
+
     /// Set the birth and survival rules, defaults to conway's game of life
     /// rules. For the rule notation see:
     /// https://en.wikipedia.org/wiki/Life-like_cellular_automaton#Notation_for_rules
     /// -
-    #[clap(short, long, value_parser = Rules::parse, default_value = "B3/S23", verbatim_doc_comment)]
+    #[clap(
+        short,
+        long,
+        value_parser = Rules::parse,
+        default_value = "B3/S23",
+        verbatim_doc_comment
+    )]
     pub rules: Rules,
-
-    /// Start paused so that you can edit the world
-    #[clap(short, long, value_parser, default_value_t = false)]
-    pub paused: bool,
 }

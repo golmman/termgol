@@ -65,7 +65,7 @@ impl CellSetup {
         let mut captures_iter = soup_regex.captures_iter(s);
         if let Some(captures) = captures_iter.next() {
             let soup_size: i32 = captures[1].parse().unwrap();
-            Ok(CellSetup::parse_soup(soup_size))
+            Ok(CellSetup::rect_soup(soup_size, soup_size))
         } else {
             let mut file = File::open(s)?;
             let mut file_content = String::new();
@@ -74,12 +74,12 @@ impl CellSetup {
         }
     }
 
-    fn parse_soup(soup_size: i32) -> CellSetup {
+    pub fn rect_soup(width: i32, height: i32) -> CellSetup {
         let mut soup = String::new();
 
         let mut rng = WyRand::new();
-        for _y in 0..soup_size {
-            for _x in 0..soup_size {
+        for _y in 0..height {
+            for _x in 0..width {
                 if rng.generate_range(0_u8..=1) == 0 {
                     soup.push('.');
                 } else {

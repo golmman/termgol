@@ -5,7 +5,10 @@
 // https://stackoverflow.com/questions/4842424/list-of-ansi-color-escape-sequences
 // https://gist.github.com/fnky/458719343aabd01cfb17a3a4f7296797
 
-use std::fmt::Display;
+use std::{
+    cmp::{max, min},
+    fmt::Display,
+};
 
 use clap::{Command, Error, ErrorKind};
 
@@ -38,6 +41,33 @@ impl Rgb {
         let b = u8::from_str_radix(&hex_code[5..7], 16).map_err(|_| error_map())?;
 
         Ok(Rgb { r, g, b })
+    }
+
+    pub fn blend(&self, other: &Rgb, alpha: u8) -> Rgb {
+        let a = alpha as i32;
+        let r = ((a * self.r as i32 + (255 - a) * other.r as i32) / 255) as u8;
+        let g = ((a * self.g as i32 + (255 - a) * other.g as i32) / 255) as u8;
+        let b = ((a * self.b as i32 + (255 - a) * other.b as i32) / 255) as u8;
+        Rgb { r, g, b }
+    }
+
+    pub fn fade(&mut self, target: &Rgb, fading_speed: i32) {
+        let f_r = Rgb::calc_real_fading_speed(fading_speed, target.r as i32 - self.r as i32);
+        let f_g = Rgb::calc_real_fading_speed(fading_speed, target.g as i32 - self.g as i32);
+        let f_b = Rgb::calc_real_fading_speed(fading_speed, target.b as i32 - self.b as i32);
+        self.r = (self.r as i32 + f_r) as u8;
+        self.g = (self.g as i32 + f_g) as u8;
+        self.b = (self.b as i32 + f_b) as u8;
+    }
+
+    fn calc_real_fading_speed(fading_speed: i32, color_delta: i32) -> i32 {
+        if color_delta < 0 {
+            return max(-fading_speed, color_delta);
+        } else if color_delta > 0 {
+            return min(fading_speed, color_delta);
+        }
+
+        0
     }
 }
 

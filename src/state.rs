@@ -1,3 +1,5 @@
+use std::cmp::{max, min};
+
 use crate::common::args::Args;
 use crate::common::point::Point;
 use crate::common::DEBUG_INFO_PAGE_TOTAL;
@@ -49,8 +51,27 @@ impl State {
             return;
         }
 
+        self.handle_screen_saver();
         self.elapsed_time += 1;
         self.world.update();
+    }
+
+    fn handle_screen_saver(&mut self) {
+        if let Some(screen_saver) = self.args.screen_saver {
+            if self.elapsed_time < 30 {
+                self.world.color_alpha = min(255, self.world.color_alpha as i32 + 10) as u8;
+            }
+
+            if self.elapsed_time > (screen_saver + 30) as u64 {
+                self.world.color_alpha = max(0, self.world.color_alpha as i32 - 10) as u8;
+            }
+
+            if self.elapsed_time >= (screen_saver + 60) as u64 {
+                self.world = World::from(self.args.clone());
+                self.world.resize(&self.screen_size);
+                self.elapsed_time = 0;
+            }
+        }
     }
 
     pub fn toggle_pause(&mut self) {

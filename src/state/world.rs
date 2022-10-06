@@ -1,4 +1,4 @@
-use std::cmp::{max, min};
+use nanorand::{Rng, WyRand};
 
 use crate::common::{
     args::Args,
@@ -12,6 +12,7 @@ pub struct World {
     pub birth_rule: Vec<u32>,
     pub cell_setup: CellSetup,
     pub cells: Vec<Cell>,
+    pub color_alpha: u8,
     pub color_bg_alive: Rgb,
     pub color_bg_dead: Rgb,
     pub fading_speed: i32,
@@ -21,10 +22,19 @@ pub struct World {
 
 impl From<Args> for World {
     fn from(args: Args) -> Self {
+        let (color_alpha, cell_setup) = if args.screen_saver.is_some() {
+            let mut rng = WyRand::new();
+            let width = rng.generate_range(15_i32..=75);
+            let height = rng.generate_range(5_i32..=25);
+            (0, CellSetup::rect_soup(width, height))
+        } else {
+            (255, args.cell_setup)
+        };
         Self {
             birth_rule: args.rules.birth.clone(),
-            cell_setup: args.cell_setup,
+            cell_setup,
             cells: Vec::new(),
+            color_alpha,
             color_bg_alive: args.color_bg_alive,
             color_bg_dead: args.color_bg_dead,
             fading_speed: args.fading_speed,
@@ -83,35 +93,12 @@ impl World {
         self.cells[i] = cell;
     }
 
-    fn calc_fading_speed(&self, color_delta: i32) -> i32 {
-        if color_delta < 0 {
-            return max(-self.fading_speed, color_delta);
-        } else if color_delta > 0 {
-            return min(self.fading_speed, color_delta);
-        }
-
-        0
-    }
-
     pub fn set_dead_fading(&mut self, i: usize) {
-        let Rgb { r, g, b } = self.cells[i].color.bg;
-        let fading_r = self.calc_fading_speed(self.color_bg_dead.r as i32 - r as i32);
-        let fading_g = self.calc_fading_speed(self.color_bg_dead.g as i32 - g as i32);
-        let fading_b = self.calc_fading_speed(self.color_bg_dead.b as i32 - b as i32);
-
-        let cell = Cell {
-            alive: false,
-            color: Color {
-                fg: Rgb::default(),
-                bg: Rgb {
-                    r: (r as i32 + fading_r) as u8,
-                    g: (g as i32 + fading_g) as u8,
-                    b: (b as i32 + fading_b) as u8,
-                },
-            },
-        };
-
-        self.cells[i] = cell;
+        self.cells[i].alive = false;
+        self.cells[i]
+            .color
+            .bg
+            .fade(&self.color_bg_dead, self.fading_speed);
     }
 
     fn setup_blank(&mut self) {

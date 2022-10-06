@@ -73,4 +73,19 @@ pub struct Args {
         verbatim_doc_comment
     )]
     pub rules: Rules,
+
+    /// Start in screen saver mode: sets up a new random soup after the specified
+    /// number of elapsed frames.
+    #[clap(short, long, value_parser)]
+    pub screen_saver: Option<u32>,
+}
+
+// Ideally we would set the Args default values in its Default impl,
+// unfortunatly clap does not support this at the moment
+// (https://github.com/clap-rs/clap/issues/3116) so we have to do it the other
+// way around.
+impl Default for Args {
+    fn default() -> Self {
+        Self::parse_from(Vec::<String>::new().into_iter())
+    }
 }

@@ -1,6 +1,5 @@
 [package]
-authors = ["golmman"]
-description = "simulates game of life like cellular automatons in your terminal"
+authors = ["github.com/golmman"]
 name = "termgol"
 version = "0.1.0"
 edition = "2021"

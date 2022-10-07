@@ -4,8 +4,14 @@ use crate::{
 };
 use clap::Parser;
 
+/// Simulates game of life like cellular automatons in your terminal.
+/// Keyboard controls:
+///   p           - pause time and enable drawing
+///   space       - toggle cell life in pause/drawing mode
+///   d           - show debug info
+///   q or ctrl-c - quit
 #[derive(Clone, Debug, Parser)]
-#[clap(author, version, about, long_about = None)]
+#[clap(author, version, verbatim_doc_comment)]
 pub struct Args {
     /// Load a world with a predefined cell setup.
     /// Recognized values:

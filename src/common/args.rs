@@ -61,6 +61,10 @@ pub struct Args {
     #[clap(short, long, value_parser, default_value_t = false)]
     pub paused: bool,
 
+    /// Start paused so that you can edit the world
+    #[clap(long, value_parser, default_value_t = false)]
+    pub rainbow: bool,
+
     /// Set the birth and survival rules, defaults to conway's game of life
     /// rules. For the rule notation see:
     /// https://en.wikipedia.org/wiki/Life-like_cellular_automaton#Notation_for_rules

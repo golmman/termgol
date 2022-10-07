@@ -26,6 +26,42 @@ impl Default for Rgb {
 }
 
 impl Rgb {
+    pub fn red() -> Self {
+        Self { r: 255, g: 0, b: 0 }
+    }
+
+    pub fn green() -> Self {
+        Self { r: 0, g: 255, b: 0 }
+    }
+
+    pub fn blue() -> Self {
+        Self { r: 0, g: 0, b: 255 }
+    }
+
+    pub fn yellow() -> Self {
+        Self {
+            r: 255,
+            g: 255,
+            b: 0,
+        }
+    }
+
+    pub fn cyan() -> Self {
+        Self {
+            r: 0,
+            g: 255,
+            b: 255,
+        }
+    }
+
+    pub fn violet() -> Self {
+        Self {
+            r: 255,
+            g: 0,
+            b: 255,
+        }
+    }
+
     pub fn parse(hex_code: &str) -> Result<Rgb, Error> {
         let error_map = || {
             Command::new("set argument to e.g. '#ff0000' for a bright red color")

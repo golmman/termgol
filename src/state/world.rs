@@ -4,6 +4,7 @@ use crate::common::{
     args::Args,
     color::{Color, Rgb},
     point::Point,
+    rainbow::Rainbow,
 };
 
 use super::{cell::Cell, cell_image::CellImage, cell_setup::CellSetup};
@@ -16,6 +17,7 @@ pub struct World {
     pub color_bg_alive: Rgb,
     pub color_bg_dead: Rgb,
     pub fading_speed: i32,
+    pub rainbow: Option<Rainbow>,
     pub size: Point,
     pub survival_rule: Vec<u32>,
 }
@@ -30,6 +32,20 @@ impl From<Args> for World {
         } else {
             (255, args.cell_setup)
         };
+
+        let rainbow = if args.rainbow {
+            Some(Rainbow::new(vec![
+                Rgb::red(),
+                Rgb::yellow(),
+                Rgb::green(),
+                Rgb::cyan(),
+                Rgb::blue(),
+                Rgb::violet(),
+            ]))
+        } else {
+            None
+        };
+
         Self {
             birth_rule: args.rules.birth.clone(),
             cell_setup,
@@ -38,6 +54,7 @@ impl From<Args> for World {
             color_bg_alive: args.color_bg_alive,
             color_bg_dead: args.color_bg_dead,
             fading_speed: args.fading_speed,
+            rainbow,
             size: Point::new(0, 0),
             survival_rule: args.rules.survival.clone(),
         }
@@ -48,6 +65,9 @@ impl World {
     pub fn resize(&mut self, size: &Point) {
         self.size = size.clone();
 
+        if let Some(rainbow) = &mut self.rainbow {
+            rainbow.resize(size);
+        }
         self.setup_cells();
     }
 
@@ -66,11 +86,18 @@ impl World {
     }
 
     pub fn set_alive(&mut self, i: usize) {
+        let bg = if let Some(rainbow) = &self.rainbow {
+            let point = Point::new(i as i32 % self.size.width(), i as i32 / self.size.width());
+            rainbow.at(point)
+        } else {
+            self.color_bg_alive
+        };
+
         let cell = Cell {
             alive: true,
             color: Color {
                 fg: Rgb::default(),
-                bg: self.color_bg_alive,
+                bg,
             },
         };
 

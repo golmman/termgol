@@ -21,7 +21,8 @@ pub struct Args {
     ///   soupX       - a random square "soup" of cells, where X is the length of an edge
     ///   termgol     - TERMGOL letters
     /// When the input does not match against the values above it is
-    /// interpreted as a file path.
+    /// interpreted as a file path. In a file the characters ' ' and '.' are
+    /// interpreted as dead cells, all other characters as living cells.
     /// -
     #[clap(
         short,

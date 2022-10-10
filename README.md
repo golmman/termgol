@@ -21,10 +21,14 @@
 - toroidal or sheet world
 
 
-## Build
+## Build, Install
+
+### Prerequisites
 
 In order to build and use this project you need the compiler for the [rust programming language](https://www.rust-lang.org/tools/install)
 and a terminal emulator which knows how to handle 24 bit colors (e.g. iTerm2, Windows Terminal, xfce-terminal, alacritty, ...).
+
+### Build
 
 Clone, build with
 
@@ -35,6 +39,19 @@ cargo build --release
 ```
 
 You can then find the executable at `./target/release/termgol`.
+
+### Run
+
+If you just want to try it out use `cargo run --release`.
+
+### Install
+
+Use
+```
+cargo install --path .
+```
+to install the application to the rust/cargo bin directory (`$HOME/.cargo/bin`)
+which should be in you `PATH` after you installed rust.
 
 ## Usage
 

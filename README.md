@@ -2,7 +2,10 @@
 
 Application which brings Conway's game of life and other cellular automata to your terminal!
 
-![example](https://github.com/golmman/termgol/blob/master/gifs/ex1.gif "example")
+![example](https://github.com/golmman/termgol/blob/main/gifs/ex1.gif "example")
+![example](https://github.com/golmman/termgol/blob/main/gifs/ex2.gif "example")
+![example](https://github.com/golmman/termgol/blob/main/gifs/ex3.gif "example")
+![example](https://github.com/golmman/termgol/blob/main/gifs/ex4.gif "example")
 
 ## Features
 

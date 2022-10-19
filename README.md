@@ -1,5 +1,9 @@
 # termgol
 
+Application which brings Conway's game of life and other cellular automata to your terminal!
+
+![example](https://github.com/golmman/termgol/blob/master/gifs/ex1.gif "example")
+
 ## Features
 
 - pause and draw cells
@@ -14,12 +18,14 @@
 - screensaver mode, which resets the cell setup after a given number of frames
 - rainbow colors
 
+See [termgol -h](./HELP) for all options a arguments.
+
 ### Ideas (not implemented)
 
-- ~~cell setups from stdin~~ (no raw mode after EOF `:(`)
+- ~~cell setups from stdin~~ - no raw mode after EOF `:(`
 - customizable live and dead cell character
 - toroidal or sheet world
-
+- hash life
 
 ## Build, Install
 

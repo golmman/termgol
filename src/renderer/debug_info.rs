@@ -1,8 +1,9 @@
 use super::Renderer;
-use crate::common::color::Color;
-use crate::common::point::Point;
 use crate::common::DEBUG_INFO_PAGE_TOTAL;
 use crate::state::State;
+use term2d::model::color::Color;
+use term2d::model::point::Point;
+use term2d::view::canvas::Canvas;
 
 impl Renderer {
     pub fn draw_debug_info(&mut self, state: &State) {
@@ -16,8 +17,8 @@ impl Renderer {
     fn draw_next_line(&mut self, formatted_string: String) {
         let color = Color::text();
 
-        self.screen
-            .draw_text(Point::new(0, self.debug_line_y), color, formatted_string);
+        self.canvas
+            .draw_text(&Point::new(0, self.debug_line_y), &color, &formatted_string);
         self.debug_line_y += 1;
     }
 
@@ -36,8 +37,8 @@ impl Renderer {
 
         self.draw_next_line(format!(
             "cols: {}, rows: {}, time: {}",
-            self.screen.size.width(),
-            self.screen.size.height(),
+            state.world.size.width(),
+            state.world.size.height(),
             state.elapsed_time,
         ));
 

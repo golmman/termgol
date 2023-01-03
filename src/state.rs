@@ -1,8 +1,9 @@
-use std::cmp::{max, min};
+use std::cmp::max;
+use std::cmp::min;
 
 use crate::common::args::Args;
-use crate::common::point::Point;
 use crate::common::DEBUG_INFO_PAGE_TOTAL;
+use term2d::model::point::Point;
 
 use self::world::World;
 

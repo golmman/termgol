@@ -1,11 +1,12 @@
-use super::{color::Rgb, point::Point};
+use term2d::model::point::Point;
+use term2d::model::rgba::Rgba;
 
 const CORRECTION_FACTOR_X: f32 = 0.5;
 const CORRECTION_FACTOR_Y: f32 = 1.0;
 
 #[derive(Debug)]
 pub struct Rainbow {
-    colors: Vec<Rgb>,
+    colors: Vec<Rgba>,
     normal: (f32, f32),
     normalized_color_distance: f32,
     radius: f32,
@@ -14,7 +15,7 @@ pub struct Rainbow {
 }
 
 impl Rainbow {
-    pub fn new(colors: Vec<Rgb>) -> Self {
+    pub fn new(colors: Vec<Rgba>) -> Self {
         let radius = 1_f32;
         let normal = (1_f32, 0_f32);
         let normalized_color_distance = 1_f32 / (colors.len() as f32 - 1_f32);
@@ -45,7 +46,7 @@ impl Rainbow {
         );
     }
 
-    pub fn at(&self, point: Point) -> Rgb {
+    pub fn at(&self, point: Point) -> Rgba {
         let point_corrected = (
             CORRECTION_FACTOR_X * point.x as f32,
             CORRECTION_FACTOR_Y * point.y as f32,
@@ -55,8 +56,8 @@ impl Rainbow {
             / (self.radius * self.radius);
 
         let i = ((self.colors.len() - 1) as f32 * point_projection) as usize;
-        let color1 = self.colors[i];
-        let color2 = self.colors[i + 1];
+        let color1 = self.colors[i].clone();
+        let color2 = self.colors[i + 1].clone();
 
         let a = point_projection / self.normalized_color_distance - i as f32;
 
@@ -64,6 +65,6 @@ impl Rainbow {
         let g = ((1_f32 - a) * color1.g as f32 + a * color2.g as f32) as u8;
         let b = ((1_f32 - a) * color1.b as f32 + a * color2.b as f32) as u8;
 
-        Rgb { r, g, b }
+        Rgba { r, g, b, a: 255 }
     }
 }

@@ -1,4 +1,4 @@
-use crate::common::color::Color;
+use term2d::model::color::Color;
 
 #[derive(Clone)]
 pub struct Cell {

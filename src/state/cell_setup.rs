@@ -1,5 +1,7 @@
-use nanorand::{Rng, WyRand};
-use std::{fs::File, io::Read};
+use nanorand::Rng;
+use nanorand::WyRand;
+use std::fs::File;
+use std::io::Read;
 
 use clap::Error;
 use regex::Regex;

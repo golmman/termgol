@@ -1,4 +1,4 @@
-use crate::common::point::Point;
+use term2d::model::point::Point;
 
 use super::cell_setup::CellSetup;
 

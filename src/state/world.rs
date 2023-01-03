@@ -1,21 +1,24 @@
-use nanorand::{Rng, WyRand};
+use nanorand::Rng;
+use nanorand::WyRand;
 
-use crate::common::{
-    args::Args,
-    color::{Color, Rgb},
-    point::Point,
-    rainbow::Rainbow,
-};
+use crate::common::args::Args;
+use crate::common::rainbow::Rainbow;
+use term2d::model::color::Color;
+use term2d::model::point::Point;
+use term2d::model::rgba::Rgba;
 
-use super::{cell::Cell, cell_image::CellImage, cell_setup::CellSetup};
+use super::cell::Cell;
+use super::cell_image::CellImage;
+use super::cell_setup::CellSetup;
 
 pub struct World {
     pub birth_rule: Vec<u32>,
     pub cell_setup: CellSetup,
     pub cells: Vec<Cell>,
+    // TODO
     pub color_alpha: u8,
-    pub color_bg_alive: Rgb,
-    pub color_bg_dead: Rgb,
+    pub color_bg_alive: Rgba,
+    pub color_bg_dead: Rgba,
     pub fading_speed: i32,
     pub rainbow: Option<Rainbow>,
     pub size: Point,
@@ -35,12 +38,12 @@ impl From<Args> for World {
 
         let rainbow = if args.rainbow {
             Some(Rainbow::new(vec![
-                Rgb::red(),
-                Rgb::yellow(),
-                Rgb::green(),
-                Rgb::cyan(),
-                Rgb::blue(),
-                Rgb::violet(),
+                Rgba::red(),
+                Rgba::yellow(),
+                Rgba::green(),
+                Rgba::cyan(),
+                Rgba::blue(),
+                Rgba::violet(),
             ]))
         } else {
             None
@@ -79,7 +82,7 @@ impl World {
 
         for p in &cell_image.living_points {
             let point = &cell_image_pos + p;
-            if point.is_bounded(&self.size) {
+            if point.is_contained(&self.size) {
                 self.set_alive_p(point);
             }
         }
@@ -90,13 +93,13 @@ impl World {
             let point = Point::new(i as i32 % self.size.width(), i as i32 / self.size.width());
             rainbow.at(point)
         } else {
-            self.color_bg_alive
+            self.color_bg_alive.clone()
         };
 
         let cell = Cell {
             alive: true,
             color: Color {
-                fg: Rgb::default(),
+                fg: Rgba::default(),
                 bg,
             },
         };
@@ -112,8 +115,8 @@ impl World {
         let cell = Cell {
             alive: false,
             color: Color {
-                fg: Rgb::default(),
-                bg: self.color_bg_dead,
+                fg: Rgba::default(),
+                bg: self.color_bg_dead.clone(),
             },
         };
 
@@ -132,8 +135,8 @@ impl World {
         let dead_cell = Cell {
             alive: false,
             color: Color {
-                fg: Rgb::default(),
-                bg: self.color_bg_dead,
+                fg: Rgba::default(),
+                bg: self.color_bg_dead.clone(),
             },
         };
         self.cells = vec![dead_cell; (self.size.width() * self.size.height()) as usize];

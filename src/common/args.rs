@@ -1,8 +1,9 @@
-use crate::{
-    common::color::Rgb,
-    state::{cell_setup::CellSetup, rules::Rules},
-};
+use crate::state::cell_setup::CellSetup;
+use crate::state::rules::Rules;
 use clap::Parser;
+use term2d::model::rgba::Rgba;
+
+use super::color::RgbaParser;
 
 /// Simulates game of life like cellular automatons in your terminal.
 /// Keyboard controls:
@@ -34,12 +35,12 @@ pub struct Args {
     pub cell_setup: CellSetup,
 
     /// Set the initial background color for living cells
-    #[clap(long, value_parser = Rgb::parse, default_value = "#EE8822")]
-    pub color_bg_alive: Rgb,
+    #[clap(long, value_parser = RgbaParser::parse, default_value = "#EE8822")]
+    pub color_bg_alive: Rgba,
 
     /// Set the initial background color for dead cells
-    #[clap(long, value_parser = Rgb::parse, default_value = "#113011")]
-    pub color_bg_dead: Rgb,
+    #[clap(long, value_parser = RgbaParser::parse, default_value = "#113011")]
+    pub color_bg_dead: Rgba,
 
     /// Set the initial delay in milliseconds before the life starts evolving
     #[clap(short, long, value_parser, default_value_t = 1000)]

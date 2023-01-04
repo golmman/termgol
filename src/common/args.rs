@@ -19,7 +19,8 @@ pub struct Args {
     ///   acorn       - a classic long living minimal configuration
     ///   blank       - an empty world
     ///   r-pentonimo - a classic long living configuration with only 5 living cells
-    ///   soupX       - a random square "soup" of cells, where X is the length of an edge
+    ///   randomX     - random pattern filling the entire screen with X (2 digits) percent of pixels alive
+    ///   soupX       - a random square "soup" of cells, where X is the (3 digit) length of an edge
     ///   termgol     - TERMGOL letters
     /// When the input does not match against the values above it is
     /// interpreted as a file path. In a file the characters ' ' and '.' are

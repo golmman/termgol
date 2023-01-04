@@ -52,8 +52,13 @@ impl State {
             return;
         }
 
-        self.handle_screen_saver();
         self.elapsed_time += 1;
+
+        if self.elapsed_time * 1000 / (self.args.frames_per_second as u64) < self.args.delay {
+            return;
+        }
+
+        self.handle_screen_saver();
         self.world.update();
     }
 

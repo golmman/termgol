@@ -63,10 +63,17 @@ impl CellSetup {
     }
 
     fn parse_special(s: &str) -> std::io::Result<CellSetup> {
+        let random_regex = Regex::new(r"^random(\d{1,2})$").unwrap();
+        let mut random_captures_iter = random_regex.captures_iter(s);
+
         let soup_regex = Regex::new(r"^soup(\d{1,3})$").unwrap();
-        let mut captures_iter = soup_regex.captures_iter(s);
-        if let Some(captures) = captures_iter.next() {
-            let soup_size: i32 = captures[1].parse().unwrap();
+        let mut soup_captures_iter = soup_regex.captures_iter(s);
+
+        if let Some(random_captures) = random_captures_iter.next() {
+            let random_percent: u8 = random_captures[1].parse().unwrap();
+            Ok(CellSetup::random_percentage(random_percent))
+        } else if let Some(soup_captures) = soup_captures_iter.next() {
+            let soup_size: i32 = soup_captures[1].parse().unwrap();
             Ok(CellSetup::rect_soup(soup_size, soup_size))
         } else {
             let mut file = File::open(s)?;
@@ -83,6 +90,24 @@ impl CellSetup {
         for _y in 0..height {
             for _x in 0..width {
                 if rng.generate_range(0_u8..=1) == 0 {
+                    soup.push('.');
+                } else {
+                    soup.push('O');
+                }
+            }
+            soup.push('\n');
+        }
+
+        CellSetup::Special(soup)
+    }
+
+    pub fn random_percentage(percentage: u8) -> CellSetup {
+        let mut soup = String::new();
+
+        let mut rng = WyRand::new();
+        for _y in 0..200 {
+            for _x in 0..300 {
+                if rng.generate_range(0_u8..=100) >= percentage {
                     soup.push('.');
                 } else {
                     soup.push('O');

@@ -39,7 +39,7 @@ impl term2d::controller::Controller<HalfblockCanvas> for Controller {
             },
             Event::Resize => {
                 let size = self.renderer.resize();
-                self.state.resize(&size.into());
+                self.state.resize(size);
             }
             Event::Elapse => self.state.elapse_time(),
         }

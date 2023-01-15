@@ -1,11 +1,11 @@
 [package]
 authors = ["github.com/golmman"]
 name = "termgol"
-version = "1.1.1"
+version = "1.1.2"
 edition = "2021"
 
 [dependencies]
 clap = { version = "3.2.22", features = ["derive"] }
 nanorand = "0.7.0"
 regex = "1.6.0"
-term2d = "0.6.1"
+term2d = "0.7.3"
